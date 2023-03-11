@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+   .menuHoverEffect {
+    @apply cursor-pointer hover:bg-gray-200  rounded-full w-[55px] xl:w-auto h-[55px] xl:h-auto xl:p-5
+   }
+}
