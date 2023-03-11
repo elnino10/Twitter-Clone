@@ -11,7 +11,7 @@ import {
   DotsCircleHorizontalIcon,
   DotsHorizontalIcon,
 } from "@heroicons/react/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const menuItems = [
   { id: "m1", text: "Home", icon: <HomeIcon className="h-7" /> },
@@ -30,13 +30,24 @@ const menuItems = [
 
 const Sidebar = () => {
   const [isActive, setIsActive] = useState(false);
+  const [activeMenuId, setActiveMenuId] = useState("m1");
+
+  useEffect(() => {
+    setIsActive(true)
+  }, []);
 
   const activeStyleHandler = (menuId) => {
-    if (menuItems[id] === menuId) setIsActive(true)
+    menuItems.find((menu) => {
+      if (menu.id === menuId) {
+        setActiveMenuId((prev) => (prev = menu.id));
+        setIsActive(true);
+      }
+    });
   };
+
   return (
-    <div>
-      <div className="menuHoverEffect">
+    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full">
+      <div className="hover:bg-blue-100 xl:py-2 xl:ml-2 rounded-full">
         <Image
           src="https://cdn.pixabay.com/photo/2018/06/22/19/03/logo-3491390_960_720.png"
           alt="twitter-logo"
@@ -44,7 +55,7 @@ const Sidebar = () => {
           height="50"
         ></Image>
       </div>
-      <div>
+      <div className="mt-4 mb-2.5 xl:items-start">
         {/* Sidebar menu */}
         {menuItems.map((menuItem) => (
           <SidebarMenu
@@ -54,22 +65,22 @@ const Sidebar = () => {
             icon={menuItem.icon}
             activeStyle={activeStyleHandler.bind(null, menuItem.id)}
             isActive={isActive}
+            activeMenu={activeMenuId}
           />
         ))}
       </div>
-      <button className="">Tweet</button>
-      <div>
-        <Image
+      <button className="bg-blue-500 text-white rounded-full w-56 h-12 font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">Tweet</button>
+      <div className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto ml-2">
+        <img
           src="/assets/images/my-image.jpg"
           alt="profile-image"
-          width="50"
-          height="50"
+          className="w-12 h-12 rounded-full xl:mr-2"
         />
-        <div className="menuHoverEffect">
-          <h4>Elnino</h4>
-          <p>@ninocodes</p>
+        <div className="leading-5 hidden xl:inline">
+          <h4 className="font-bold">Elnino</h4>
+          <p className="text-gray-500">@ninocodes</p>
         </div>
-        <DotsHorizontalIcon className="h-5" />
+        <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline" />
       </div>
     </div>
   );

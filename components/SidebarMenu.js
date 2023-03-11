@@ -1,17 +1,24 @@
-const SidebarMenu = ({ id, text, icon, activeStyle, isActive }) => {
+import { useCallback } from "react";
 
-  console.log(isActive);
+const SidebarMenu = ({ id, text, icon, activeStyle, isActive, activeMenu }) => {
+  const menuSelector = useCallback(() => {
+    activeStyle();
+  }, [activeStyle]);
 
   const selectMenuHandler = () => {
-    activeStyle()
+    menuSelector();
   };
 
   return (
-    <div className="menuHoverEffect flex items-center text-gray-700 justify-center xl:justify-start text-lg space-x-3">
+    <div
+      className="menuHoverEffect flex items-center text-gray-700 justify-center xl:justify-start text-lg space-x-3"
+      onClick={selectMenuHandler}
+    >
       {icon}
       <span
-        className={`${isActive ? "font-bold" : ""}`}
-        onClick={selectMenuHandler}
+        className={`${
+          isActive && activeMenu === id ? "font-bold" : ""
+        } hidden xl:inline`}
       >
         {text}
       </span>
