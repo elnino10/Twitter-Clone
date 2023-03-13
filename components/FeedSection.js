@@ -1,4 +1,5 @@
 import { SparklesIcon } from "@heroicons/react/outline";
+import InputSection from "./InputSection";
 
 const FeedSection = () => {
   return (
@@ -9,6 +10,7 @@ const FeedSection = () => {
           <SparklesIcon className="h-5 mt-1" />
         </div>
       </div>
+      <InputSection />
     </div>
   );
 };
