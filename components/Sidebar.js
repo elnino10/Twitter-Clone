@@ -46,7 +46,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full">
+    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full xl:ml-24">
       <div className="hover:bg-blue-100 xl:py-2 xl:ml-2 rounded-full">
         <Image
           src="https://cdn.pixabay.com/photo/2018/06/22/19/03/logo-3491390_960_720.png"
@@ -69,7 +69,7 @@ const Sidebar = () => {
           />
         ))}
       </div>
-      <button className="bg-blue-500 text-white rounded-full w-56 h-12 font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">Tweet</button>
+      <button className="bg-blue-500 text-white rounded-full w-[150px] h-[50px] font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">Tweet</button>
       <div className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto ml-2">
         <img
           src="/assets/images/my-image.jpg"
