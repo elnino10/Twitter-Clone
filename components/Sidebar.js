@@ -11,6 +11,7 @@ import {
   DotsCircleHorizontalIcon,
   DotsHorizontalIcon,
 } from "@heroicons/react/outline";
+import { AiOutlineSetting } from "react-icons/ai";
 import { useEffect, useState } from "react";
 
 const menuItems = [
@@ -28,16 +29,34 @@ const menuItems = [
   },
 ];
 
-const Sidebar = () => {
+const menuItemsAuth = [
+  { id: "m2", text: "Explore", icon: <HashtagIcon className="h-7" /> },
+  { id: "m9", text: "Settings", icon: <AiOutlineSetting className="h-7 w-7" /> },
+];
+
+const Sidebar = ({isAuth}) => {
   const [isActive, setIsActive] = useState(false);
-  const [activeMenuId, setActiveMenuId] = useState("m1");
+  const [activeMenuId, setActiveMenuId] = useState("");
 
   useEffect(() => {
-    setIsActive(true)
-  }, []);
+    setActiveMenuId("m2");
+    setIsActive(true);
+    if (isAuth) {
+      setActiveMenuId("m1");
+      setIsActive(true);
+    }
+  }, [isAuth]);
 
   const activeStyleHandler = (menuId) => {
-    menuItems.find((menu) => {
+    if (isAuth) {
+      menuItems.find((menu) => {
+        if (menu.id === menuId) {
+          setActiveMenuId((prev) => (prev = menu.id));
+          setIsActive(true);
+        }
+      });
+    }
+    menuItemsAuth.find((menu) => {
       if (menu.id === menuId) {
         setActiveMenuId((prev) => (prev = menu.id));
         setIsActive(true);
@@ -46,42 +65,65 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full xl:ml-24">
-      <div className="hover:bg-blue-100 xl:py-2 xl:ml-2 rounded-full">
+    <div className="hidden sm:flex flex-col px-8 xl:items-start fixed h-full xl:ml-24">
+      <div className="hover:bg-blue-100 xl:ml-2 rounded-full p-4">
         <Image
-          src="https://cdn.pixabay.com/photo/2018/06/22/19/03/logo-3491390_960_720.png"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREv2iK0rk8t7xPQQx_G-SKoUNao4VpV5ywoF6VdVJZZQ&s"
           alt="twitter-logo"
-          width="50"
-          height="50"
+          width="30"
+          height="30"
         ></Image>
       </div>
-      <div className="mt-4 mb-2.5 xl:items-start">
-        {/* Sidebar menu */}
-        {menuItems.map((menuItem) => (
-          <SidebarMenu
-            key={menuItem.id}
-            id={menuItem.id}
-            text={menuItem.text}
-            icon={menuItem.icon}
-            activeStyle={activeStyleHandler.bind(null, menuItem.id)}
-            isActive={isActive}
-            activeMenu={activeMenuId}
-          />
-        ))}
-      </div>
-      <button className="bg-blue-500 text-white rounded-full w-[150px] h-[50px] font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">Tweet</button>
-      <div className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto ml-2">
-        <img
-          src="/assets/images/my-image.jpg"
-          alt="profile-image"
-          className="w-12 h-12 rounded-full xl:mr-2"
-        />
-        <div className="leading-5 hidden xl:inline">
-          <h4 className="font-bold">Elnino</h4>
-          <p className="text-gray-500">@ninocodes</p>
+      {isAuth ? (
+        <div className="mt-1 mb-2.5 xl:items-start">
+          {/* Sidebar menu */}
+          {menuItems.map((menuItem) => (
+            <SidebarMenu
+              key={menuItem.id}
+              id={menuItem.id}
+              text={menuItem.text}
+              icon={menuItem.icon}
+              activeStyle={activeStyleHandler.bind(null, menuItem.id)}
+              isActive={isActive}
+              activeMenu={activeMenuId}
+            />
+          ))}
         </div>
-        <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline" />
-      </div>
+      ) : (
+        <div className="mt-1 mb-2.5 xl:items-start">
+          {/* Sidebar menu */}
+          {menuItemsAuth.map((menuItem) => (
+            <SidebarMenu
+              key={menuItem.id}
+              id={menuItem.id}
+              text={menuItem.text}
+              icon={menuItem.icon}
+              activeStyle={activeStyleHandler.bind(null, menuItem.id)}
+              isActive={isActive}
+              activeMenu={activeMenuId}
+            />
+          ))}
+        </div>
+      )}
+      {isAuth && (
+        <button className="bg-blue-500 text-white rounded-full w-[150px] h-[50px] font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">
+          Tweet
+        </button>
+      )}
+      {isAuth && (
+        <div className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto ml-2">
+          <img
+            src="/assets/images/my-image.jpg"
+            alt="profile-image"
+            className="w-12 h-12 rounded-full xl:mr-2"
+          />
+          <div className="leading-5 hidden xl:inline">
+            <h4 className="font-bold">Elnino</h4>
+            <p className="text-gray-500">@ninocodes</p>
+          </div>
+          <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline" />
+        </div>
+      )}
     </div>
   );
 };

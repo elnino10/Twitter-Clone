@@ -11,7 +11,7 @@ const SidebarMenu = ({ id, text, icon, activeStyle, isActive, activeMenu }) => {
 
   return (
     <div
-      className="menuHoverEffect flex items-center text-gray-700 justify-center xl:justify-start text-lg space-x-3"
+      className="menuHoverEffect flex items-center text-gray-900 justify-center xl:justify-start text-xl space-x-3"
       onClick={selectMenuHandler}
     >
       {icon}

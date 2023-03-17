@@ -21,8 +21,8 @@ const Posts = ({ post }) => {
           <div className="flex items-center space-x-1 whitespace-nowrap">
             {/* user info */}
             <h4 className="font-bold text-[15px] sm:text-[16px] hover:text-gray-700 hover:underline">{post.name}</h4>
-            <span className="text-sm sm:text-[15px]">@{post.username}</span>
-            <span className="text-sm sm:text-[15px]"> - {post.timestamp}</span>
+            <span className="text-sm sm:text-[15px] text-gray-500">@{post.username}</span>
+            <span className="text-sm sm:text-[15px] text-gray-500"> - {post.timestamp}</span>
           </div>
           <div className="">
             <DotsHorizontalIcon className="h-10 w-10 menuHoverEffect hover:bg-sky-100 hover:text-sky-500 p-2" />

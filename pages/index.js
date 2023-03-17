@@ -5,10 +5,12 @@ import axios from "axios";
 import Sidebar from "@/components/Sidebar";
 import FeedSection from "@/components/FeedSection";
 import WidgetSection from "@/components/WidgetSection";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home({ propData }) {
+export default function Home({ newsData, userData }) {
+  const [isAuth, setIsAuth] = useState(false)
   return (
     <>
       <Head>
@@ -19,13 +21,13 @@ export default function Home({ propData }) {
       </Head>
       <main className="flex min-h-screen mx-auto relative">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar isAuth={isAuth} />
 
         {/* Feed */}
-          <FeedSection />
+          <FeedSection isAuth={isAuth} />
 
         {/* Widgets */}
-          <WidgetSection propData={propData} />
+          <WidgetSection newsData={newsData} userData={userData} />
 
         {/* Modal */}
       </main>
@@ -33,16 +35,22 @@ export default function Home({ propData }) {
   );
 }
 
-const baseURL = "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json";
+const newsBaseURL = "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json";
+const usersBaseURL = "https://randomuser.me/api/?results=20&inc=name,login,picture"
 
 export const getStaticProps = async () => {
-  // fetch data from API
-  const response = await axios.get(baseURL);
-  const propData = response.data.articles;
+  // News data API
+  const response = await axios.get(newsBaseURL);
+  const newsData = response.data.articles;
+
+  // Random users API
+  const responseData = await axios.get(usersBaseURL)
+  const userData = responseData.data.results
 
   return {
     props: {
-      propData,
+      newsData,
+      userData
     },
     revalidate: 3600 * 3,
   };
