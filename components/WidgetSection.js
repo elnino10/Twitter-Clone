@@ -22,7 +22,7 @@ const WidgetSection = ({ newsData, userData }) => {
         <input
           type="text"
           placeholder="Search Twitter"
-          className="absolute inset-0 rounded-full pl-10 border-gray-500 text-gray-500 bg-gray-100 focus:bg-white focus:shadow-lg"
+          className="absolute inset-0 rounded-full pl-10 border-inherit text-gray-500 bg-gray-100 focus:bg-white focus:shadow-lg"
         />
       </div>
       <div className="text-gray-700 bg-gray-100 space-y-3 pt-2 rounded-xl w-[90%] xl:w-[65%] mt-3">
