@@ -27,7 +27,7 @@ export default function Home({ newsData, userData }) {
           <FeedSection isAuth={isAuth} />
 
         {/* Widgets */}
-          <WidgetSection newsData={newsData} userData={userData} />
+          <WidgetSection newsData={newsData} userData={userData} isAuth={isAuth} />
 
         {/* Modal */}
       </main>

@@ -16,7 +16,7 @@ const Trending = () => {
       {newsTrend.slice(0, showTrend).map((trend) => (
         <div
           key={trend.name}
-          className="flex items-start justify-between px-4 py-2 cursor-pointer hover:bg-gray-100 transition duration-200"
+          className="flex items-start justify-between px-4 py-2 cursor-pointer hover:bg-gray-100"
         >
           <div className="flex flex-col justify-between leading-6">
             <span className="text-sm text-gray-500">{trend.category}</span>
