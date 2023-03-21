@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DotsHorizontalIcon, SparklesIcon } from "@heroicons/react/outline";
 import InputSection from "./InputFeed";
 import Post from "./Post";
@@ -89,6 +90,11 @@ const FeedSection = ({ isAuth }) => {
             <DotsHorizontalIcon className="xl:hidden h-7 mx-5"/>
           </div>
           <Trending />
+          <div className="xl:hidden flex justify-between bg-white sticky bottom-0 p-4">
+            <Link href="/auth/signin"  className="rounded-full border border-blue-400 text-blue-400 font-bold w-40 h-8 flex justify-center items-center text-sm">Log in</Link>
+            <Link href="/auth/signup" className="rounded-full bg-blue-400 text-white font-bold w-40 flex justify-center items-center text-sm
+            ">Sign up</Link>
+        </div>
         </section>
       )}
     </>
