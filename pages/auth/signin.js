@@ -2,10 +2,7 @@ import Signin from "@/components/Signin";
 import { getProviders } from "next-auth/react";
 
 const signin = ({ providers }) => {
-
-  return (
-    <Signin />
-  );
+  return <Signin />;
 };
 
 export const getStaticProps = async () => {

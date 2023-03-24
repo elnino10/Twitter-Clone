@@ -4,7 +4,7 @@ import FollowSuggestion from "./FollowSuggestion";
 import NewsWidget from "./NewsWidget";
 import SignupSection from "./SignupSection";
 
-const WidgetSection = ({ newsData, userData, isAuth }) => {
+const WidgetSection = ({ newsData, userData, isAuth, openModal }) => {
   const [showNews, setShowNews] = useState(3);
   const [showUsers, setShowUsers] = useState(5);
 
@@ -65,7 +65,7 @@ const WidgetSection = ({ newsData, userData, isAuth }) => {
           </div>
         </section>
       ) : (
-        <SignupSection />
+        <SignupSection openModal={openModal} />
       )}
     </>
   );

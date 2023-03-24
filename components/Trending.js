@@ -27,7 +27,7 @@ const Trending = () => {
           </div>
           <div className="">
             <DotsHorizontalIcon className="h-8 p-1.5 text-gray-700 hover:bg-blue-200 hover:text-blue-600 rounded-full peer" />
-            <span className="text-xs bg-gray-600 text-white rounded p-1 invisible peer-hover:visible delay-700">More</span>
+            <span className="text-xs bg-gray-600 text-white rounded p-1 invisible peer-hover:visible delay-300 ease-in">More</span>
           </div>
         </div>
       ))}

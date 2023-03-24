@@ -1,7 +1,11 @@
 import { ChevronDownIcon, DotsHorizontalIcon } from "@heroicons/react/outline";
 import { AiFillApple, AiOutlineCopyrightCircle } from "react-icons/ai";
 
-const SignupSection = () => {
+const SignupSection = ({ openModal }) => {
+  const openModalHandler = () => {
+    openModal();
+  };
+
   return (
     <>
       <div className="hidden xl:inline xl:w-[400px] fixed ml-[62rem]">
@@ -43,52 +47,40 @@ const SignupSection = () => {
               <AiFillApple className="w-6 h-6" />
               <p className="font-semibold ml-1">Sign up with Apple</p>
             </div>
-            <div className="border rounded-full h-10 flex items-center justify-center mt-4 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800">
+            <div
+              onClick={openModalHandler}
+              className="border rounded-full h-10 flex items-center justify-center mt-4 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
+            >
               <p className="font-semibold ml-1">Create account</p>
             </div>
           </div>
           <p className="pl-3 pt-3 pr-5 pb-4 text-sm leading-5">
             By signing up, you agree to the{" "}
-            <a
-              href="https://twitter.com/tos"
-              className="hover:underline text-blue-400"
-            >
-              Terms of Service
-            </a>{" "}
+            <span className="text-blue-400 cursor-pointer hover:underline">
+              Terms of Service{" "}
+            </span>
             and{" "}
-            <a
-              href="https://twitter.com/privacy"
-              className="hover:underline text-blue-400"
-            >
+            <span className="text-blue-400 cursor-pointer hover:underline">
               Privacy Policy
-            </a>
+            </span>
             , including{" "}
-            <a
-              href="https://help.twitter.com/rules-and-policies/twitter-cookies"
-              className="hover:underline text-blue-400"
-            >
+            <span className="text-blue-400 cursor-pointer hover:underline">
               Cookie Use
-            </a>
+            </span>
             .
           </p>
         </div>
         <div className="pt-3 pl-12 text-[13px] text-gray-500 xl:w-[95%]">
           <p className="">
-            <a className="hover:underline cursor-pointer">Terms of Service</a>{" "}
-            <a className="hover:underline cursor-pointer ml-2">
-              Privacy Policy
-            </a>{" "}
-            <a className="hover:underline cursor-pointer ml-2">Cookie Policy</a>
-            <br />
-            <a className="hover:underline cursor-pointer">Accessibility</a>
-            <a className="hover:underline cursor-pointer ml-2">Ads info</a>{" "}
+            This project is made for learning purpose and for the practice and
+            implementation of different development concepts
             <a className="hover:underline cursor-pointer flex">
               More
               <DotsHorizontalIcon className="h-4 translate-y-1 ml-1" />
             </a>
             <span className="flex items-center">
               <AiOutlineCopyrightCircle className="pr-0.5 mr-0.5" /> 2023
-              Twitter, Inc.
+              Twitter-clone, App.
             </span>
           </p>
         </div>
