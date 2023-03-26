@@ -10,6 +10,7 @@ export const authOptions = {
     }),
     // ...add more providers here
   ],
+  secret: process.env.JWT_SECRET,
   pages: {
     signin: "/auth/signin",
     signup: "/auth/signup"

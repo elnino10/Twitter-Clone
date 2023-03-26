@@ -1,3 +1,4 @@
+import { signIn } from "next-auth/react";
 import { ChevronDownIcon, DotsHorizontalIcon } from "@heroicons/react/outline";
 import { AiFillApple, AiOutlineCopyrightCircle } from "react-icons/ai";
 
@@ -17,31 +18,18 @@ const SignupSection = ({ openModal }) => {
             <p className="text-sm text-gray-500">
               Sign up now to get your own personalized timeline!
             </p>
-            <div className="border rounded-full h-10 flex items-center mt-4 cursor-pointer hover:bg-gray-100 transition duration-200">
+            
+            <div
+              onClick={() => signIn()}
+              className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
+            >
               <img
                 src="/assets/images/google-icon.png"
                 alt="google-logo"
-                width="15"
-                className="ml-1.5"
+                width="30"
+                className="p-1.5"
               />
-              <div className=" flex justify-between ml-2 py-1 w-[90%]">
-                <div className="ml-2 leading-3">
-                  <p className="font-semibold text-xs">Sign in as Joe</p>
-                  <p className="flex items-end text-gray-500 text-xs">
-                    phebjoe17@gmail.com{" "}
-                    <span>
-                      <ChevronDownIcon className="h-3 pl-2" />
-                    </span>
-                  </p>
-                </div>
-                {/* google logo */}
-                <img
-                  src="/assets/images/google-icon.png"
-                  alt="google-logo"
-                  width="30"
-                  className="p-1.5"
-                />
-              </div>
+              <p className="font-semibold ml-1">Continue with Google</p>
             </div>
             <div className="border rounded-full h-10 flex items-center justify-center mt-4 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800">
               <AiFillApple className="w-6 h-6" />

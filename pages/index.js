@@ -1,11 +1,12 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 import Sidebar from "@/components/Sidebar";
 import FeedSection from "@/components/FeedSection";
 import WidgetSection from "@/components/WidgetSection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Modal from "@/components/UI/Modal";
 import Signin from "@/components/Signin";
@@ -17,6 +18,14 @@ export default function Home({ newsData, userData }) {
   const [isAuth, setIsAuth] = useState(false);
   const [showSigninModal, setShowSigninModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const { data: session } = useSession();
+
+  useEffect(()=>{
+    if (session) {
+        setIsAuth(true);
+      }
+  },[session])
+
 
   const closeSigninModalHandler = () => {
     setShowSigninModal(false);
@@ -64,17 +73,13 @@ export default function Home({ newsData, userData }) {
             isVisible={showSigninModal}
             closeModal={closeSigninModalHandler}
           >
-            <Signin
-              closeModal={closeSigninModalHandler}
-            />
+            <Signin closeModal={closeSigninModalHandler} />
           </Modal>
           <Modal
             isVisible={showSignupModal}
             closeModal={closeSignupModalHandler}
           >
-            <Signup
-              closeModal={closeSignupModalHandler}
-            />
+            <Signup closeModal={closeSignupModalHandler} />
           </Modal>
         </div>
         {!isAuth && !showSigninModal && !showSignupModal && (
@@ -90,17 +95,18 @@ export default function Home({ newsData, userData }) {
                 onClick={showSigninModalHandler}
                 href="/"
                 as="/auth/signin"
-                className="cursor-pointer rounded-full border border-white text-white font-bold w-[80px] h-10 flex justify-center items-center text-sm mr-5"
+                className="hover:bg-blue-400 hover:bg-opacity-50 bg-transparent cursor-pointer rounded-full border border-white text-white font-bold w-[80px] h-10 flex justify-center items-center text-sm pb-0.5 mr-5"
               >
                 Log in
               </Link>
-              <div
+              <Link
                 onClick={showSignupModalHandler}
-                // href="/auth/signup"
-                className="cursor-pointer rounded-full border border-white bg-white text-gray-800 font-bold w-[80px] h-10 flex justify-center items-center text-sm"
+                href="/"
+                as="/auth/signup"
+                className="hover:bg-opacity-90 cursor-pointer rounded-full border border-white bg-white text-gray-800 font-bold w-[80px] h-10 flex justify-center items-center text-sm pb-0.5"
               >
                 Sign up
-              </div>
+              </Link>
             </div>
           </div>
         )}

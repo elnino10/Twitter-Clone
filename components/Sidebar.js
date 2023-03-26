@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import SidebarMenu from "./SidebarMenu";
 import { HomeIcon } from "@heroicons/react/solid";
 import {
@@ -37,6 +38,7 @@ const menuItemsAuth = [
 const Sidebar = ({isAuth}) => {
   const [isActive, setIsActive] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState("");
+  const {data: session} = useSession()
 
   useEffect(() => {
     setActiveMenuId("m2");
@@ -111,15 +113,15 @@ const Sidebar = ({isAuth}) => {
         </button>
       )}
       {isAuth && (
-        <div className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto ml-2">
+        <div className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto mb-2 ml-2 xl:ml-1">
           <img
-            src="/assets/images/my-image.jpg"
+            src={session.user.image}
             alt="profile-image"
             className="w-12 h-12 rounded-full xl:mr-2"
           />
           <div className="leading-5 hidden xl:inline">
-            <h4 className="font-bold">Elnino</h4>
-            <p className="text-gray-500">@ninocodes</p>
+            <h4 className="font-bold">{session.user.name}</h4>
+            <p className="text-gray-500">@{session.user.email.split("@")[0]}</p>
           </div>
           <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline" />
         </div>

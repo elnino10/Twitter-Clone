@@ -2,9 +2,8 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillApple, AiOutlineClose } from "react-icons/ai";
-import Modal from "./UI/Modal";
 
-const Signin = ({ providers, closeModal }) => {
+const Signin = ({ provider, signIn, closeModal }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const inputRef = useRef(null);
@@ -62,7 +61,10 @@ const Signin = ({ providers, closeModal }) => {
         <h2 className="font-bold text-[25px] text-gray-800">
           Sign in to Twitter
         </h2>
-        <div className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800">
+        <div
+          onClick={()=>signIn(provider.id, {callbackUrl: "/"})}
+          className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
+        >
           <img
             src="/assets/images/google-icon.png"
             alt="google-logo"
