@@ -1,4 +1,3 @@
-import { signOut } from "next-auth/react";
 import { useCallback } from "react";
 
 const SidebarMenu = ({ id, text, icon, activeStyle, isActive, activeMenu }) => {
@@ -17,7 +16,6 @@ const SidebarMenu = ({ id, text, icon, activeStyle, isActive, activeMenu }) => {
     >
       {icon}
       <span
-        onClick={signOut}
         className={`${
           isActive && activeMenu === id ? "font-bold" : ""
         } hidden xl:inline`}

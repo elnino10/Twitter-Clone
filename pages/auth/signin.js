@@ -1,5 +1,5 @@
 import Signin from "@/components/Signin";
-import SignupSection from "@/components/SignupSection";
+import SigninWidget from "@/components/SigninWidget";
 import { getProviders, signIn } from "next-auth/react";
 import { Fragment } from "react";
 
@@ -7,7 +7,7 @@ const signin = ({ providers }) => {
   return Object.values(providers).map((provider) => (
     <Fragment key={provider.id}>
       <Signin signIn={signIn} provider={provider} />
-      <SignupSection provider={provider} signIn={signIn} />
+      <SigninWidget provider={provider} signIn={signIn} />
     </Fragment>
   ));
 };

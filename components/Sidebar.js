@@ -14,6 +14,7 @@ import {
 } from "@heroicons/react/outline";
 import { AiOutlineSetting } from "react-icons/ai";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const menuItems = [
   { id: "m1", text: "Home", icon: <HomeIcon className="h-7" /> },
@@ -113,7 +114,7 @@ const Sidebar = ({isAuth}) => {
         </button>
       )}
       {isAuth && (
-        <div className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto mb-2 ml-2 xl:ml-1">
+        <Link href="/signout" className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto mb-2 ml-2 xl:ml-1">
           <img
             src={session.user.image}
             alt="profile-image"
@@ -121,10 +122,10 @@ const Sidebar = ({isAuth}) => {
           />
           <div className="leading-5 hidden xl:inline">
             <h4 className="font-bold">{session.user.name}</h4>
-            <p className="text-gray-500">@{session.user.email.split("@")[0]}</p>
+            <p className="text-gray-500">@{session.user.username}</p>
           </div>
           <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline" />
-        </div>
+        </Link>
       )}
     </div>
   );

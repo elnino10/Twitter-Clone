@@ -2,7 +2,7 @@ import { SearchIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 import FollowSuggestion from "./FollowSuggestion";
 import NewsWidget from "./NewsWidget";
-import SignupSection from "./SignupSection";
+import SignupSection from "./SigninWidget";
 
 const WidgetSection = ({ newsData, userData, isAuth, openModal }) => {
   const [showNews, setShowNews] = useState(3);

@@ -9,6 +9,7 @@ const Signin = ({ provider, signIn, closeModal }) => {
   const inputRef = useRef(null);
   // console.log(providers);
 
+  // removes the effect of clicking on the input by clicking on it's parent element
   const removeClickEffect = (e) => {
     e.preventDefault();
     const dataValue = e.currentTarget.getAttribute("data-value");
@@ -23,6 +24,7 @@ const Signin = ({ provider, signIn, closeModal }) => {
     }
   };
 
+  // shows that the input section was clicked
   const clickHandler = (e) => {
     e.stopPropagation();
     inputRef.current && inputRef.current.focus();
@@ -62,7 +64,7 @@ const Signin = ({ provider, signIn, closeModal }) => {
           Sign in to Twitter
         </h2>
         <div
-          onClick={()=>signIn(provider.id, {callbackUrl: "/"})}
+          onClick={() => signIn(provider.id, { callbackUrl: "/" })}
           className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
         >
           <img

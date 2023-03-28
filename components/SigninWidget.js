@@ -2,9 +2,9 @@ import { signIn } from "next-auth/react";
 import { ChevronDownIcon, DotsHorizontalIcon } from "@heroicons/react/outline";
 import { AiFillApple, AiOutlineCopyrightCircle } from "react-icons/ai";
 
-const SignupSection = ({ openModal }) => {
+const SigninWidget = () => {
   const openModalHandler = () => {
-    openModal();
+    props.openModal();
   };
 
   return (
@@ -18,7 +18,6 @@ const SignupSection = ({ openModal }) => {
             <p className="text-sm text-gray-500">
               Sign up now to get your own personalized timeline!
             </p>
-            
             <div
               onClick={() => signIn()}
               className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
@@ -29,11 +28,11 @@ const SignupSection = ({ openModal }) => {
                 width="30"
                 className="p-1.5"
               />
-              <p className="font-semibold ml-1">Continue with Google</p>
+              <p className="font-semibold ml-1">Sign in with Google</p>
             </div>
-            <div className="border rounded-full h-10 flex items-center justify-center mt-4 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800">
+            <div className="border rounded-full h-10 flex items-center justify-center mt-5 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800">
               <AiFillApple className="w-6 h-6" />
-              <p className="font-semibold ml-1">Sign up with Apple</p>
+              <p className="font-semibold ml-1">Sign in with Apple</p>
             </div>
             <div
               onClick={openModalHandler}
@@ -77,4 +76,4 @@ const SignupSection = ({ openModal }) => {
   );
 };
 
-export default SignupSection;
+export default SigninWidget;

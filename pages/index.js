@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { getProviders, signIn, useSession } from "next-auth/react";
 
 import Sidebar from "@/components/Sidebar";
 import FeedSection from "@/components/FeedSection";
@@ -14,18 +14,17 @@ import Signup from "@/components/Signup";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home({ newsData, userData }) {
+export default function Home({ newsData, userData, providers }) {
   const [isAuth, setIsAuth] = useState(false);
   const [showSigninModal, setShowSigninModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const { data: session } = useSession();
 
-  useEffect(()=>{
+  useEffect(() => {
     if (session) {
-        setIsAuth(true);
-      }
-  },[session])
-
+      setIsAuth(true);
+    }
+  }, [session]);
 
   const closeSigninModalHandler = () => {
     setShowSigninModal(false);

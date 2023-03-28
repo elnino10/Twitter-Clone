@@ -13,7 +13,17 @@ export const authOptions = {
   secret: process.env.JWT_SECRET,
   pages: {
     signin: "/auth/signin",
-    signup: "/auth/signup"
-  }
+    // signup: "/auth/signup"
+  },
+  callbacks: {
+    async session({ session, token }) {
+      session.user.username = session.user.name
+        .split(" ")
+        .join("")
+        .toLocaleLowerCase();
+      session.user.userid = token.sub;
+      return session;
+    },
+  },
 };
 export default NextAuth(authOptions);
