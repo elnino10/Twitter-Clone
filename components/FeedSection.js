@@ -59,7 +59,7 @@ const FeedSection = ({ isAuth }) => {
           <SparklesIcon className="h-5 mt-1" />
         </div>
       </div>
-      <InputSection />
+      <InputSection isAuth={isAuth} />
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import axios from "axios";
-import { getProviders, signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import Sidebar from "@/components/Sidebar";
 import FeedSection from "@/components/FeedSection";
@@ -14,7 +14,7 @@ import Signup from "@/components/Signup";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home({ newsData, userData, providers }) {
+export default function Home({ newsData, userData }) {
   const [isAuth, setIsAuth] = useState(false);
   const [showSigninModal, setShowSigninModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -51,7 +51,6 @@ export default function Home({ newsData, userData, providers }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div id="overlays"></div>
         <div className="flex min-h-screen mx-auto relative">
           {/* Sidebar */}
           <Sidebar isAuth={isAuth} />

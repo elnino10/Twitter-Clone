@@ -2,7 +2,7 @@ import { signIn } from "next-auth/react";
 import { ChevronDownIcon, DotsHorizontalIcon } from "@heroicons/react/outline";
 import { AiFillApple, AiOutlineCopyrightCircle } from "react-icons/ai";
 
-const SigninWidget = () => {
+const SigninWidget = (props) => {
   const openModalHandler = () => {
     props.openModal();
   };
