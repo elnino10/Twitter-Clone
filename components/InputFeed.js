@@ -1,5 +1,9 @@
 import { db, storage } from "@/firebase";
-import { PhotographIcon, EmojiHappyIcon } from "@heroicons/react/outline";
+import {
+  PhotographIcon,
+  EmojiHappyIcon,
+  XIcon,
+} from "@heroicons/react/outline";
 import {
   addDoc,
   collection,
@@ -10,11 +14,11 @@ import {
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useSession } from "next-auth/react";
 import { useRef, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
 
 const InputFeed = ({ isAuth }) => {
   const [inputText, setInputText] = useState("");
   const [postFile, setPostFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
   const fileInputRef = useRef(null);
 
@@ -39,6 +43,8 @@ const InputFeed = ({ isAuth }) => {
   };
 
   const createPost = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
     const docRef = await addDoc(collection(db, "posts"), {
       id: session.user.userid,
       text: inputText,
@@ -61,6 +67,7 @@ const InputFeed = ({ isAuth }) => {
 
     setInputText("");
     setPostFile(null);
+    setIsLoading(false);
   };
 
   // cancel the selected file on preview
@@ -69,7 +76,7 @@ const InputFeed = ({ isAuth }) => {
   };
 
   return (
-    <div className="flex border-b border-gray-200 p-3 space-x-3">
+    <div className="w-[600px] flex border-b border-gray-200 p-3 space-x-3">
       <img
         src={isAuth ? session.user.image : "/assets/images/avatar.png"}
         alt="profile-image"
@@ -86,37 +93,42 @@ const InputFeed = ({ isAuth }) => {
           ></textarea>
         </div>
         {postFile && (
-          <div className="flex justify-center">
-            <AiOutlineClose
+          <div className="w-[70%] m-auto relative border-none">
+            <XIcon
               onClick={removeImageHandler}
-              className="absolute h-5 w-5 text-blue-500 bg-gray-300 text-lg -ml-80 mt-2 rounded-full cursor-pointer p-0.5 hover:bg-gray-400 hover:text-black"
+              className="absolute h-5 w-5 text-blue-500 bg-gray-300 text-lg ml-2 mt-2 rounded-full cursor-pointer p-0.5 hover:bg-gray-400 hover:text-black shadow-md shadow-blue-400 hover:shadow-none transition duration-300"
             />
             <img
               src={postFile}
-              alt="postImage"
-              className="xl:w-[70%] xl:h-[350px] rounded-lg"
+              className={`xl:w-full xl:h-full rounded-lg ${
+                isLoading && "animate-pulse"
+              }`}
             />
           </div>
         )}
         <div className="flex items-center justify-between pt-2">
           <div className="flex">
-            <div className="" onClick={addPostFile}>
-              <PhotographIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
-              <input
-                type="file"
-                hidden
-                ref={fileInputRef}
-                onChange={addSelectedFile}
-              />
-            </div>
-            <EmojiHappyIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
+            {!isLoading && (
+              <>
+                <div className="" onClick={addPostFile}>
+                  <PhotographIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
+                  <input
+                    type="file"
+                    hidden
+                    ref={fileInputRef}
+                    onChange={addSelectedFile}
+                  />
+                </div>
+                <EmojiHappyIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
+              </>
+            )}
           </div>
           <button
             onClick={createPost}
             disabled={!inputText.trim()}
             className="bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-90 disabled:opacity-50"
           >
-            Tweet
+            {isLoading ? "Tweeting..." : "Tweet"}
           </button>
         </div>
       </div>
