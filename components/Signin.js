@@ -57,7 +57,7 @@ const Signin = ({ provider, signIn, closeModal }) => {
           width="30"
           height="30"
           className="ml-[8.5rem] xl:ml-[230px]"
-        ></Image>
+        />
       </div>
       <div className="pt-12 px-8">
         <h2 className="font-bold text-[25px] text-gray-800">
@@ -67,7 +67,7 @@ const Signin = ({ provider, signIn, closeModal }) => {
           onClick={() => signIn(provider.id, { callbackUrl: "/" })}
           className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
         >
-          <img
+          <Image
             src="/assets/images/google-icon.png"
             alt="google-logo"
             width="30"

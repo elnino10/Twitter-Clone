@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRef, useState } from "react";
 
 const InputFeed = ({ isAuth }) => {
@@ -77,8 +78,10 @@ const InputFeed = ({ isAuth }) => {
 
   return (
     <div className="w-[600px] flex border-b border-gray-200 p-3 space-x-3">
-      <img
+      <Image
         src={isAuth ? session.user.image : "/assets/images/avatar.png"}
+        width='48'
+        height='48'
         alt="profile-image"
         className="h-11 w-12 rounded-full cursor-pointer hover:brightness-95"
       />
@@ -98,8 +101,11 @@ const InputFeed = ({ isAuth }) => {
               onClick={removeImageHandler}
               className="absolute h-5 w-5 text-blue-500 bg-gray-300 text-lg ml-2 mt-2 rounded-full cursor-pointer p-0.5 hover:bg-gray-400 hover:text-black shadow-md shadow-blue-400 hover:shadow-none transition duration-300"
             />
-            <img
+            <Image
               src={postFile}
+              width=''
+              height=''
+              alt="post-file"
               className={`xl:w-full xl:h-full rounded-lg ${
                 isLoading && "animate-pulse"
               }`}

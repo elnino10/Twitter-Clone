@@ -1,56 +1,30 @@
-import Link from "next/link";
-import { DotsHorizontalIcon, SparklesIcon } from "@heroicons/react/outline";
+import { SparklesIcon } from "@heroicons/react/outline";
 import InputSection from "./InputFeed";
 import Post from "./Post";
-import { SearchIcon } from "@heroicons/react/outline";
-import { AiOutlineSetting } from "react-icons/ai";
-import Trending from "./Trending";
-import Image from "next/image";
-
-const posts = [
-  {
-    id: "p1",
-    name: "Elnino",
-    username: "ninocodes",
-    userImg: "/assets/images/my-image.jpg",
-    postImg:
-      "https://media.istockphoto.com/id/1173544006/photo/winding-road.jpg?s=612x612&w=0&k=20&c=_VMEnB08arEsLnbES0knQUWHPrCD8TQFCy99JC4RZIQ=",
-    tweet: "Beautiful nature experience",
-    timestamp: "3 hours ago",
-  },
-  {
-    id: "p2",
-    name: "Kenchuckz",
-    username: "kenondabeatz",
-    userImg: "/assets/images/kenchukz.jpg",
-    postImg:
-      "https://media.istockphoto.com/id/1367869166/photo/professional-microphone-on-the-streaming-or-podcast-room-background.jpg?s=612x612&w=0&k=20&c=mcEq7dIs_QfW24ffYgjEwE5JgXB4hC0EXmK6c1hbsgE=",
-    tweet: "We make nothing but good music! 🙂",
-    timestamp: "1 hour ago",
-  },
-  {
-    id: "p3",
-    name: "Jesse Ozioma",
-    username: "ninocodes",
-    userImg: "/assets/images/JesseMJ.jpg",
-    postImg:
-      "https://media.istockphoto.com/id/1173544006/photo/winding-road.jpg?s=612x612&w=0&k=20&c=_VMEnB08arEsLnbES0knQUWHPrCD8TQFCy99JC4RZIQ=",
-    tweet: "Beautiful nature experience",
-    timestamp: "3 hours ago",
-  },
-  {
-    id: "p4",
-    name: "Polaino Concept",
-    username: "kenondabeatz",
-    userImg: "/assets/images/Polaino.jpg",
-    postImg:
-      "https://media.istockphoto.com/id/1367869166/photo/professional-microphone-on-the-streaming-or-podcast-room-background.jpg?s=612x612&w=0&k=20&c=mcEq7dIs_QfW24ffYgjEwE5JgXB4hC0EXmK6c1hbsgE=",
-    tweet: "We make nothing but good music! 🙂",
-    timestamp: "1 hour ago",
-  },
-];
+import { collection, getDocs, orderBy } from "firebase/firestore";
+import { useCallback, useEffect, useState } from "react";
+import { db } from "@/firebase";
 
 const FeedSection = ({ isAuth }) => {
+  const [posts, setPosts] = useState([]);
+
+  const getPosts = useCallback(async () => {
+    const data = await getDocs(query(collection(db, "posts"), orderBy("timestamp")));
+    if (posts) {
+      setPosts(
+        data.docs.map((item) => {
+          return { ...item.data(), id: item.id };
+        })
+      );
+    }
+  }, [posts]);
+
+  useEffect(() => {
+    if (posts) {
+      getPosts();
+    }
+  }, [posts, getPosts]);
+
   return (
     <section className="sm:ml-24 xl:ml-[25rem] border-black-100 border-l border-r shadow mt-1 flex-grow max-w-[597px]">
       <div className="flex items-center justify-between p-2 border-b border-gray-200 sticky top-0 bg-white">
@@ -60,9 +34,11 @@ const FeedSection = ({ isAuth }) => {
         </div>
       </div>
       <InputSection isAuth={isAuth} />
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+      <div>
+        {posts.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
+      </div>
     </section>
   );
 };
