@@ -1,3 +1,4 @@
+import { db } from "@/firebase";
 import {
   DotsHorizontalIcon,
   ChatIcon,
@@ -6,9 +7,23 @@ import {
   ShareIcon,
   ChartBarIcon,
 } from "@heroicons/react/outline";
+import { doc, setDoc } from "firebase/firestore";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useState } from "react";
+import Moment from "react-moment";
 
 const Posts = ({ post }) => {
+  const [toggleLike, setToggleLike] = useState(false)
+  const {data: session} = useSession()
+
+  const likePostHandler = async () => {
+    setToggleLike(toggleLike => !toggleLike)
+    await setDoc(doc(db, "posts", post.id, "likes", session.user.userid), {
+      username: session.user.username
+    })
+  }
+
   return (
     <div className="flex flex-col p-2 cursor-pointer border-b border-gray-200">
       <div className="flex items-center">
@@ -31,7 +46,7 @@ const Posts = ({ post }) => {
           </span>
           <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
             {" "}
-            - {`timestamp`}
+            - <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
           </span>
         </div>
         <div className="ml-auto">
@@ -50,7 +65,7 @@ const Posts = ({ post }) => {
         <div className="flex items-center justify-between h-10 my-1 text-gray-500 p-2">
           <ChatIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100" />
           <TrashIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-red-500 hover:bg-red-100" />
-          <HeartIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-red-500 hover:bg-red-100" />
+          <HeartIcon onClick={likePostHandler} className={`h-10 w-10 p-2 menuHoverEffect hover:text-red-500 hover:bg-red-100 ${toggleLike === true ? "text-red" : ""}`} />
           <ShareIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100" />
           <ChartBarIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100" />
         </div>

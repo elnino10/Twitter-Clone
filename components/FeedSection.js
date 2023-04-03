@@ -1,7 +1,7 @@
 import { SparklesIcon } from "@heroicons/react/outline";
 import InputSection from "./InputFeed";
 import Post from "./Post";
-import { collection, getDocs, orderBy } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { db } from "@/firebase";
 
