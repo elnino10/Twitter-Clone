@@ -80,8 +80,8 @@ const InputFeed = ({ isAuth }) => {
     <div className="w-[600px] flex border-b border-gray-200 p-3 space-x-3">
       <Image
         src={isAuth ? session.user.image : "/assets/images/avatar.png"}
-        width='48'
-        height='48'
+        width="48"
+        height="48"
         alt="profile-image"
         className="h-11 w-12 rounded-full cursor-pointer hover:brightness-95"
       />
@@ -103,10 +103,10 @@ const InputFeed = ({ isAuth }) => {
             />
             <Image
               src={postFile}
-              width=''
-              height=''
+              width="0"
+              height="0"
               alt="post-file"
-              className={`xl:w-full xl:h-full rounded-lg ${
+              className={`w-full h-full rounded-lg ${
                 isLoading && "animate-pulse"
               }`}
             />

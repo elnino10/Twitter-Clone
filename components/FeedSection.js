@@ -8,22 +8,22 @@ import { db } from "@/firebase";
 const FeedSection = ({ isAuth }) => {
   const [posts, setPosts] = useState([]);
 
-  const getPosts = useCallback(async () => {
-    const data = await getDocs(query(collection(db, "posts"), orderBy("timestamp")));
-    if (posts) {
-      setPosts(
-        data.docs.map((item) => {
-          return { ...item.data(), id: item.id };
-        })
-      );
-    }
-  }, [posts]);
+  // const getPostsCallback = useCallback(async () => {
+  //   const data = await getDocs(
+  //     query(collection(db, "posts"), orderBy("timestamp", "desc"))
+  //   );
+  //     setPosts(data.docs);
+  // }, []);
 
   useEffect(() => {
-    if (posts) {
-      getPosts();
-    }
-  }, [posts, getPosts]);
+    const getPosts = async () => {
+      const data = await getDocs(
+        query(collection(db, "posts"), orderBy("timestamp", "desc"))
+      );
+      setPosts(data.docs);
+    };
+    getPosts();
+  }, []);
 
   return (
     <section className="sm:ml-24 xl:ml-[25rem] border-black-100 border-l border-r shadow mt-1 flex-grow max-w-[597px]">
@@ -36,7 +36,7 @@ const FeedSection = ({ isAuth }) => {
       <InputSection isAuth={isAuth} />
       <div>
         {posts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post.id} post={post.data()} />
         ))}
       </div>
     </section>

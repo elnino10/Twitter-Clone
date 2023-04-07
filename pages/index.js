@@ -19,7 +19,7 @@ export default function Home({ newsData, userData }) {
   const [showSigninModal, setShowSigninModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const { data: session } = useSession();
-
+  
   useEffect(() => {
     if (session) {
       setIsAuth(true);

@@ -1,7 +1,9 @@
+import Image from "next/image";
+
 const FollowSuggestion = ({user}) => {
   return (
     <div className="flex items-center pr-4 hover:bg-gray-200 transition duration-200 cursor-pointer">
-      <img src={user.picture.thumbnail} width="40" className="rounded-full ml-2" />
+      <Image src={user.picture.thumbnail} width="40" height="40" alt="" className="rounded-full ml-2" />
       <div className="flex flex-col justify-start pl-4 truncate">
         <p className="font-bold text-[13px] hover:underline truncate">{user.login.username}</p>
         <span className="text-[11px] text-gray-500 truncate">{user.name.first} {user.name.last}</span>

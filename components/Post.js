@@ -7,22 +7,49 @@ import {
   ShareIcon,
   ChartBarIcon,
 } from "@heroicons/react/outline";
-import { doc, setDoc } from "firebase/firestore";
+import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Moment from "react-moment";
 
 const Posts = ({ post }) => {
-  const [toggleLike, setToggleLike] = useState(false)
-  const {data: session} = useSession()
+  const [toggleLike, setToggleLike] = useState(false);
+  const [userLikes, setUserLikes] = useState(false);
+  const [numLikes, setNumLikes] = useState([]);
+  const { data: session } = useSession();
 
-  const likePostHandler = async () => {
-    setToggleLike(toggleLike => !toggleLike)
-    await setDoc(doc(db, "posts", post.id, "likes", session.user.userid), {
-      username: session.user.username
-    })
-  }
+  console.log(toggleLike);
+
+  useEffect(() => {
+    const getLikes = async () => {
+      const snapshot = await getDocs(collection(db, "posts", post.id, "likes"));
+      setNumLikes(
+        snapshot.docs.map((item) => {
+          return { ...item.data(), id: item.id };
+        })
+      );
+    };
+    getLikes();
+  }, [post.id]);
+
+  useEffect(() => {
+    setUserLikes(
+      numLikes.findIndex((numLike) => numLike.id === session?.user.userid) !== -1
+    );
+  }, [numLikes, session?.user.userid]);
+
+  const likeHandler = async () => {
+    setToggleLike((prev) => (prev = !prev));
+    if (userLikes) {
+      await deleteDoc(doc(db, "posts", post.id, "likes", session?.user.userid));
+    } else {
+      await setDoc(doc(db, "posts", post.id, "likes", session?.user.uid), {
+        username: session?.user.username,
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col p-2 cursor-pointer border-b border-gray-200">
@@ -57,15 +84,28 @@ const Posts = ({ post }) => {
         <p className="text-gray-800 text-[15px] sm:text-[16px] mb-2 pl-11">
           {post.text}
         </p>
-        <div className="w-80 flex m-auto">
+        <div className="w-[380px] h-auto flex m-auto">
           {post.fileURL && (
-            <Image width='310' height='450' src={post.fileURL} alt="post-image" className="rounded mr-2" />
+            <Image
+              width="0"
+              height="0"
+              src={post.fileURL}
+              alt="post-image"
+              sizes="auto"
+              className="m-auto w-full p-5"
+            />
           )}
         </div>
         <div className="flex items-center justify-between h-10 my-1 text-gray-500 p-2">
           <ChatIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100" />
           <TrashIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-red-500 hover:bg-red-100" />
-          <HeartIcon onClick={likePostHandler} className={`h-10 w-10 p-2 menuHoverEffect hover:text-red-500 hover:bg-red-100 ${toggleLike === true ? "text-red" : ""}`} />
+          <div onClick={likeHandler}>
+            {userLikes ? (
+              <HeartIconSolid className="h-10 w-10 p-2 text-red-500" />
+            ) : (
+              <HeartIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-red-500 hover:bg-red-100" />
+            )}
+          </div>
           <ShareIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100" />
           <ChartBarIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100" />
         </div>
