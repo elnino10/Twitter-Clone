@@ -1,4 +1,8 @@
 export const newsTrend = [
+    { name: "Israel Adesanya", category: "Sports", tweetNum: "20.3k"},
+    { name: "Tinubu", category: "Politics", tweetNum: "15.9k"},
+    { name: "PO Detention", category: "Trending in Nigeria", tweetNum: "17.1k"},
+    { name: "Champions League", category: "Sports", tweetNum: "32.7k"},
     { name: "Revenge", category: "Sports", tweetNum: "40.3k"},
     { name: "Opay to Opay", category: "Trending in Nigeria", tweetNum: "18.5k"},
     { name: "Pastor Chris", category: "Trending in Nigeria", tweetNum: "2,789"},

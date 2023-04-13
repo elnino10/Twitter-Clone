@@ -1,18 +1,18 @@
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { Fragment } from "react";
+import React from "react";
 
 const SignOut = ({ signOut }) => {
   const Router = useRouter();
-  const { date: session } = useSession();
+  const { data: session } = useSession();
 
   console.log(session);
   return (
-    <Fragment className="xl:w-full">
-      <div className="py-12 px-8 xl:w-[50%] xl:px-[300px] border rounded mt-[50px] flex flex-col items-center justify-center">
-        <img src={""} alt="profile-image" />
-        <h2 className="font-bold text-5 xl:text-[25px] text-gray-800">
-          Want to sign out from Twitter?
+      <div className="py-12 px-8 xl:w-[70%] xl:mx-auto border rounded mt-[100px] flex flex-col items-center justify-center">
+        <Image width="45" height="45" src={session.user.image} alt="profile-image" className="rounded-full" />
+        <h2 className="font-bold text-5 xl:text-[20px] text-gray-800">
+          Sign out from Twitter?
         </h2>
         <div
           onClick={() => signOut({ callbackUrl: "/" })}
@@ -30,7 +30,6 @@ const SignOut = ({ signOut }) => {
           </span>
         </p>
       </div>
-    </Fragment>
   );
 };
 

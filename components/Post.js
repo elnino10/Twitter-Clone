@@ -11,7 +11,7 @@ import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Moment from "react-moment";
 
 const Posts = ({ post }) => {
@@ -36,7 +36,8 @@ const Posts = ({ post }) => {
 
   useEffect(() => {
     setUserLikes(
-      numLikes.findIndex((numLike) => numLike.id === session?.user.userid) !== -1
+      numLikes.findIndex((numLike) => numLike.id === session?.user.userid) !==
+        -1
     );
   }, [numLikes, session?.user.userid]);
 

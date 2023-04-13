@@ -2,18 +2,11 @@ import { SparklesIcon } from "@heroicons/react/outline";
 import InputSection from "./InputFeed";
 import Post from "./Post";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "@/firebase";
 
 const FeedSection = ({ isAuth }) => {
   const [posts, setPosts] = useState([]);
-
-  // const getPostsCallback = useCallback(async () => {
-  //   const data = await getDocs(
-  //     query(collection(db, "posts"), orderBy("timestamp", "desc"))
-  //   );
-  //     setPosts(data.docs);
-  // }, []);
 
   useEffect(() => {
     const getPosts = async () => {

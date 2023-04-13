@@ -6,11 +6,13 @@ import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import FeedSection from "@/components/FeedSection";
 import WidgetSection from "@/components/WidgetSection";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Modal from "@/components/UI/Modal";
 import Signin from "@/components/Signin";
 import Signup from "@/components/Signup";
+import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
+import TrendsPage from "@/components/TrendsPage";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,8 +20,41 @@ export default function Home({ newsData, userData }) {
   const [isAuth, setIsAuth] = useState(false);
   const [showSigninModal, setShowSigninModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [activeMenuId, setActiveMenuId] = useState("");
   const { data: session } = useSession();
-  
+  const activeMenuRef = useRef(null);
+
+  // sets the active menu
+  useEffect(() => {
+    setActiveMenuId("m2");
+    if (isAuth) {
+      setActiveMenuId("m1");
+      setIsActive(true);
+    }
+  }, [isAuth]);
+
+  // styling the active menu selected, when authenticated and when not authenticated
+  const activeStyleHandler = (menuId) => {
+    if (isAuth) {
+      menuItems &&
+        menuItems.find((menu) => {
+          if (menuId === menu.id) {
+            setActiveMenuId((prev) => (prev = menuId));
+            setIsActive(true);
+          }
+        });
+    }
+    menuItemsAuth &&
+      menuItemsAuth.find((menu) => {
+        if (menuId === menu.id) {
+          setActiveMenuId((prev) => (prev = menuId));
+          setIsActive(true);
+        }
+      });
+    console.log(activeMenuRef.current.id);
+  };
+
   useEffect(() => {
     if (session) {
       setIsAuth(true);
@@ -48,15 +83,27 @@ export default function Home({ newsData, userData }) {
         <title>Twitter Clone</title>
         <meta name="description" content="Twitter clone app" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rl="icon" href="/favicon.ico" />
       </Head>
       <main>
         <div className="flex min-h-screen mx-auto relative">
           {/* Sidebar */}
-          <Sidebar isAuth={isAuth} />
+          <Sidebar
+            isAuth={isAuth}
+            ref={activeMenuRef}
+            menuItems={menuItems}
+            menuItemsAuth={menuItemsAuth}
+            isActive={isActive}
+            activeMenuId={activeMenuId}
+            onActiveStyle={activeStyleHandler}
+          />
 
           {/* Feed */}
-          <FeedSection isAuth={isAuth} />
+          {activeMenuId === "m2" ? (
+            <TrendsPage />
+          ) : (
+            <FeedSection isAuth={isAuth} />
+          )}
 
           {/* Widgets */}
           <WidgetSection
