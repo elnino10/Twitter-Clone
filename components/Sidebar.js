@@ -65,20 +65,23 @@ const Sidebar = forwardRef(
         {isAuth && (
           <Link
             href="/auth/signout"
-            className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto mb-2 ml-2 xl:ml-1"
+            className="menuHoverEffect text-gray-700 flex items-center justify-center xl:justify-start mt-auto mb-2 ml-2 xl:ml-1 relative"
           >
             <Image
               width="48"
               height="48"
               src={session.user.image}
               alt="profile-image"
-              className="rounded-full xl:mr-2"
+              className="rounded-full xl:mr-2 peer"
             />
-            <div className="leading-5 hidden xl:inline">
+            <div className="leading-5 hidden xl:inline peer">
               <h4 className="font-bold">{session.user.name}</h4>
               <p className="text-gray-500">@{session.user.username}</p>
             </div>
-            <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline" />
+            <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline peer" />
+            <span className="text-xs bg-gray-600 text-white rounded p-1 invisible peer-hover:visible delay-300 ease-in absolute translate-x-2 translate-y-[-50px]">
+              Sign Out
+            </span>
           </Link>
         )}
       </div>

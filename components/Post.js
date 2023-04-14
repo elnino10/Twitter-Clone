@@ -6,7 +6,7 @@ import {
   HeartIcon,
   ShareIcon,
   ChartBarIcon,
-} from "@heroicons/react/outline";
+} from "@heroicons/react/outline"; 
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";

@@ -1,20 +1,21 @@
 import { SparklesIcon } from "@heroicons/react/outline";
-import InputSection from "./InputFeed";
+import InputFeed from "./InputFeed";
 import Post from "./Post";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "@/firebase";
 
 const FeedSection = ({ isAuth }) => {
   const [posts, setPosts] = useState([]);
 
+  const getPosts = () => {
+    onSnapshot(
+      query(collection(db, "posts"), orderBy("timestamp", "desc")),
+      (data) => setPosts(data.docs)
+    );
+  };
+
   useEffect(() => {
-    const getPosts = async () => {
-      const data = await getDocs(
-        query(collection(db, "posts"), orderBy("timestamp", "desc"))
-      );
-      setPosts(data.docs);
-    };
     getPosts();
   }, []);
 
@@ -26,9 +27,9 @@ const FeedSection = ({ isAuth }) => {
           <SparklesIcon className="h-5 mt-1" />
         </div>
       </div>
-      <InputSection isAuth={isAuth} />
+      <InputFeed isAuth={isAuth} />
       <div>
-        {posts.map((post) => (
+        {posts?.map((post) => (
           <Post key={post.id} post={post.data()} />
         ))}
       </div>

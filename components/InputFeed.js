@@ -4,6 +4,7 @@ import {
   EmojiHappyIcon,
   XIcon,
 } from "@heroicons/react/outline";
+import EmojiPicker from "emoji-picker-react";
 import {
   addDoc,
   collection,
@@ -20,17 +21,20 @@ const InputFeed = ({ isAuth }) => {
   const [inputText, setInputText] = useState("");
   const [postFile, setPostFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [emojiVisible, setEmojiVisible] = useState(false);
   const { data: session } = useSession();
   const fileInputRef = useRef(null);
+  const textRef = useRef(null);
 
   // sets the post text in state
   const inputHandler = (e) => {
     setInputText(e.target.value);
   };
 
+  // reads file from drive
   const addSelectedFile = (e) => {
     const reader = new FileReader();
-    if (e.target.files[0]) {
+    if (e.target.files) {
       reader.readAsDataURL(e.target.files[0]);
     }
     reader.onload = (readerEvent) => {
@@ -43,6 +47,7 @@ const InputFeed = ({ isAuth }) => {
     fileInputRef.current.click();
   };
 
+  // creates post in firestore database
   const createPost = async () => {
     if (isLoading) return;
     setIsLoading(true);
@@ -76,6 +81,22 @@ const InputFeed = ({ isAuth }) => {
     setPostFile(null);
   };
 
+  // select emoji picker
+  const emojiPickerHandler = () => {
+    setEmojiVisible((prev) => (prev = !prev));
+    console.log(emojiVisible);
+  };
+
+  const onEmojiClick = (emojiObject) => {
+    const currentCursorPosition = textRef.current.selectionStart;
+    const newTextInputValue =
+      inputText.slice(0, currentCursorPosition) +
+      emojiObject.emoji +
+      inputText.slice(currentCursorPosition);
+    setInputText(newTextInputValue);
+    setEmojiVisible(false);
+  };
+
   return (
     <div className="w-[600px] flex border-b border-gray-200 p-3 space-x-3">
       <Image
@@ -93,6 +114,7 @@ const InputFeed = ({ isAuth }) => {
             placeholder="What's happening?"
             value={inputText}
             onChange={inputHandler}
+            ref={textRef}
           ></textarea>
         </div>
         {postFile && (
@@ -115,7 +137,7 @@ const InputFeed = ({ isAuth }) => {
         <div className="flex items-center justify-between pt-2">
           <div className="flex">
             {!isLoading && (
-              <>
+              <div className="relative flex">
                 <div className="" onClick={addPostFile}>
                   <PhotographIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
                   <input
@@ -125,8 +147,25 @@ const InputFeed = ({ isAuth }) => {
                     onChange={addSelectedFile}
                   />
                 </div>
-                <EmojiHappyIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
-              </>
+                <div>
+                  <EmojiHappyIcon
+                    onClick={emojiPickerHandler}
+                    className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer"
+                  />
+                  <div
+                    className={`absolute ${emojiVisible ? "block" : "hidden"}`}
+                  >
+                    {emojiVisible && (
+                      <EmojiPicker
+                        height={400}
+                        width={300}
+                        onEmojiClick={onEmojiClick}
+                        // className="absolute"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
             )}
           </div>
           <button
