@@ -71,6 +71,7 @@ const Signin = ({ provider, signIn, closeModal }) => {
             src="/assets/images/google-icon.png"
             alt="google-logo"
             width="30"
+            height="30"
             className="p-1.5"
           />
           <p className="font-semibold ml-1">Sign in with Google</p>

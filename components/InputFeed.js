@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import { db, storage } from "@/firebase";
 import {
   PhotographIcon,
@@ -13,9 +15,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import uuid from "react-uuid";
 
 const InputFeed = ({ isAuth }) => {
   const [inputText, setInputText] = useState("");
@@ -52,7 +53,8 @@ const InputFeed = ({ isAuth }) => {
     if (isLoading) return;
     setIsLoading(true);
     const docRef = await addDoc(collection(db, "posts"), {
-      id: session.user.userid,
+      id: uuid(),
+      userId: session.user.userid,
       text: inputText,
       name: session.user.name,
       username: session.user.username,
@@ -60,8 +62,10 @@ const InputFeed = ({ isAuth }) => {
       timestamp: serverTimestamp(),
     });
 
+    // create file reference
     const fileRef = ref(storage, `posts/${docRef.id}/image`);
 
+    // checking file attachment to post
     if (postFile) {
       await uploadString(fileRef, postFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(fileRef);
