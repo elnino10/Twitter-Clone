@@ -20,6 +20,7 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Moment from "react-moment";
+import { useRouter } from "next/router";
 
 const Posts = ({ post }) => {
   const [userLikes, setUserLikes] = useState(false);
@@ -27,6 +28,7 @@ const Posts = ({ post }) => {
   const [numLikes, setNumLikes] = useState(null);
   const [panelShown, setPanelShown] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
 
   // get all likes for a post
   useEffect(() => {
@@ -44,24 +46,30 @@ const Posts = ({ post }) => {
     setUserLikes(
       postLikes.findIndex((like) => like.id === session?.user.userid) !== -1
     );
-    setNumLikes(postLikes.length);
+    setNumLikes(postLikes.length > 0 && postLikes.length);
   }, [postLikes, session?.user.userid]);
 
   // check for user like in post
   const likeHandler = async () => {
-    setUserLikes((prev) => !prev);
-    // if user liked the post, remove like, else, set as liked
-    if (userLikes) {
-      await deleteDoc(doc(db, "posts", post.id, "likes", session?.user.userid));
+    if (session) {
+      setUserLikes((prev) => !prev);
+      // if user liked the post, remove like, else, set as liked
+      if (userLikes) {
+        await deleteDoc(
+          doc(db, "posts", post.id, "likes", session?.user.userid)
+        );
+      } else {
+        await setDoc(
+          doc(db, "posts", post.id, "likes", session?.user.userid),
+          {
+            username: session?.user.username,
+          },
+          { capital: true },
+          { merge: true }
+        );
+      }
     } else {
-      await setDoc(
-        doc(db, "posts", post.id, "likes", session?.user.userid),
-        {
-          username: session?.user.username,
-        },
-        { capital: true },
-        { merge: true }
-      );
+      router.push("/auth/signin");
     }
   };
 
@@ -121,8 +129,12 @@ const Posts = ({ post }) => {
         </div>
         {panelShown && (
           <div className="flex flex-col items-start translate-x-[460px] border py-1 px-4 rounded-md absolute shadow">
-            <span className="text-sm hover:text-sky-500">Edit</span>
-            <span className="text-sm hover:text-red-500">Delete</span>
+            <span className="text-sm hover:text-sky-500 cursor-pointer">
+              Edit
+            </span>
+            <span className="text-sm hover:text-red-500 cursor-pointer">
+              Delete
+            </span>
           </div>
         )}
       </div>

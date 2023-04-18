@@ -9,10 +9,11 @@ import WidgetSection from "@/components/WidgetSection";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Modal from "@/components/UI/Modal";
-import Signin from "@/components/Signin";
+import SigninModal from "@/components/SigninModal";
 import Signup from "@/components/Signup";
 import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
 import TrendsPage from "@/components/TrendsPage";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,23 +25,21 @@ export default function Home({ newsData, userData }) {
   const [activeMenuId, setActiveMenuId] = useState("");
   const { data: session } = useSession();
   const activeMenuRef = useRef(null);
+  const router = useRouter();
 
   // sets the active menu
   useEffect(() => {
-    setActiveMenuId("m2");
-    if (isAuth) {
-      setActiveMenuId("m1");
-      setIsActive(true);
-    }
-  }, [isAuth]);
+    setActiveMenuId("m1");
+    setIsActive(true);
+  }, []);
 
-  // styling the active menu selected, when authenticated and when not authenticated
+  // show active menu selected, when authenticated and when not authenticated
   const activeStyleHandler = (menuId) => {
     if (isAuth) {
       menuItems &&
         menuItems.find((menu) => {
           if (menuId === menu.id) {
-            setActiveMenuId((prev) => (prev = menuId));
+            setActiveMenuId(menuId);
             setIsActive(true);
           }
         });
@@ -48,7 +47,7 @@ export default function Home({ newsData, userData }) {
     menuItemsAuth &&
       menuItemsAuth.find((menu) => {
         if (menuId === menu.id) {
-          setActiveMenuId((prev) => (prev = menuId));
+          setActiveMenuId(menuId);
           setIsActive(true);
         }
       });
@@ -118,7 +117,7 @@ export default function Home({ newsData, userData }) {
             isVisible={showSigninModal}
             closeModal={closeSigninModalHandler}
           >
-            <Signin closeModal={closeSigninModalHandler} />
+            <SigninModal onCloseModal={closeSigninModalHandler} />
           </Modal>
           <Modal
             isVisible={showSignupModal}
@@ -127,8 +126,8 @@ export default function Home({ newsData, userData }) {
             <Signup closeModal={closeSignupModalHandler} />
           </Modal>
         </div>
-        {!isAuth && !showSigninModal && !showSignupModal && (
-          <div className="hidden bg-sky-500 text-white sticky bottom-0 xl:flex py-1.5">
+        {!isAuth && !showSigninModal && (
+          /*!showSignupModal &&*/ <div className="hidden bg-sky-500 text-white sticky bottom-0 xl:flex py-1.5">
             <div className="ml-[400px] leading-7">
               <h2 className="font-bold text-[25px]">
                 {`Don't miss what's happening`}
@@ -136,22 +135,18 @@ export default function Home({ newsData, userData }) {
               <p className="mb-1">People on Twitter are the first to know</p>
             </div>
             <div className="flex ml-auto mr-40 items-center">
-              <Link
+              <div
                 onClick={showSigninModalHandler}
-                href="/"
-                as="/auth/signin"
                 className="hover:bg-blue-400 hover:bg-opacity-50 bg-transparent cursor-pointer rounded-full border border-white text-white font-bold w-[80px] h-10 flex justify-center items-center text-sm pb-0.5 mr-5"
               >
                 Log in
-              </Link>
-              <Link
+              </div>
+              <div
                 onClick={showSignupModalHandler}
-                href="/"
-                as="/auth/signup"
                 className="hover:bg-opacity-90 cursor-pointer rounded-full border border-white bg-white text-gray-800 font-bold w-[80px] h-10 flex justify-center items-center text-sm pb-0.5"
               >
                 Sign up
-              </Link>
+              </div>
             </div>
           </div>
         )}

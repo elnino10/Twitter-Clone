@@ -9,7 +9,6 @@ import {
   DotsCircleHorizontalIcon,
 } from "@heroicons/react/outline";
 import { AiOutlineSetting } from "react-icons/ai";
-
 export const menuItems = [
   { id: "m1", text: "Home", icon: <HomeIcon className="h-7" /> },
   {
@@ -46,6 +45,7 @@ export const menuItems = [
 ];
 
 export const menuItemsAuth = [
+  { id: "m1", text: "Home", icon: <HomeIcon className="h-7" /> },
   {
     id: "m2",
     text: "Trending",

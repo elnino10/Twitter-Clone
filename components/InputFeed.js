@@ -102,86 +102,92 @@ const InputFeed = ({ isAuth }) => {
   };
 
   return (
-    <div className="w-[600px] flex border-b border-gray-200 p-3 space-x-3">
-      <Image
-        src={isAuth ? session.user.image : "/assets/images/avatar.png"}
-        width="48"
-        height="48"
-        alt="profile-image"
-        className="h-11 w-12 rounded-full cursor-pointer hover:brightness-95"
-      />
-      <div className="w-full divide-y divide-gray-200">
-        <div className="">
-          <textarea
-            className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wide min-h-[50px] text-gray-700"
-            rows="2"
-            placeholder="What's happening?"
-            value={inputText}
-            onChange={inputHandler}
-            ref={textRef}
-          ></textarea>
-        </div>
-        {postFile && (
-          <div className="w-[70%] m-auto relative border-none">
-            <XIcon
-              onClick={removeImageHandler}
-              className="absolute h-5 w-5 text-blue-500 bg-gray-300 text-lg ml-2 mt-2 rounded-full cursor-pointer p-0.5 hover:bg-gray-400 hover:text-black shadow-md shadow-blue-400 hover:shadow-none transition duration-300"
-            />
-            <Image
-              src={postFile}
-              width="0"
-              height="0"
-              alt="post-file"
-              className={`w-full h-full rounded-lg ${
-                isLoading && "animate-pulse"
-              }`}
-            />
-          </div>
-        )}
-        <div className="flex items-center justify-between pt-2">
-          <div className="flex">
-            {!isLoading && (
-              <div className="relative flex">
-                <div className="" onClick={addPostFile}>
-                  <PhotographIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
-                  <input
-                    type="file"
-                    hidden
-                    ref={fileInputRef}
-                    onChange={addSelectedFile}
-                  />
-                </div>
-                <div>
-                  <EmojiHappyIcon
-                    onClick={emojiPickerHandler}
-                    className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer"
-                  />
-                  <div
-                    className={`absolute ${emojiVisible ? "block" : "hidden"}`}
-                  >
-                    {emojiVisible && (
-                      <EmojiPicker
-                        height={400}
-                        width={300}
-                        onEmojiClick={onEmojiClick}
-                        // className="absolute"
-                      />
-                    )}
-                  </div>
-                </div>
+    <>
+      {session && (
+        <div className="w-[600px] flex border-b border-gray-200 p-3 space-x-3">
+          <Image
+            src={isAuth ? session.user.image : "/assets/images/avatar.png"}
+            width="48"
+            height="48"
+            alt="profile-image"
+            className="h-11 w-12 rounded-full cursor-pointer hover:brightness-95"
+          />
+          <div className="w-full divide-y divide-gray-200">
+            <div className="">
+              <textarea
+                className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wide min-h-[50px] text-gray-700"
+                rows="2"
+                placeholder="What's happening?"
+                value={inputText}
+                onChange={inputHandler}
+                ref={textRef}
+              ></textarea>
+            </div>
+            {postFile && (
+              <div className="w-[70%] m-auto relative border-none">
+                <XIcon
+                  onClick={removeImageHandler}
+                  className="absolute h-5 w-5 text-blue-500 bg-gray-300 text-lg ml-2 mt-2 rounded-full cursor-pointer p-0.5 hover:bg-gray-400 hover:text-black shadow-md shadow-blue-400 hover:shadow-none transition duration-300"
+                />
+                <Image
+                  src={postFile}
+                  width="0"
+                  height="0"
+                  alt="post-file"
+                  className={`w-full h-full rounded-lg ${
+                    isLoading && "animate-pulse"
+                  }`}
+                />
               </div>
             )}
+            <div className="flex items-center justify-between pt-2">
+              <div className="flex">
+                {!isLoading && (
+                  <div className="relative flex">
+                    <div className="" onClick={addPostFile}>
+                      <PhotographIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
+                      <input
+                        type="file"
+                        hidden
+                        ref={fileInputRef}
+                        onChange={addSelectedFile}
+                      />
+                    </div>
+                    <div>
+                      <EmojiHappyIcon
+                        onClick={emojiPickerHandler}
+                        className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer"
+                      />
+                      <div
+                        className={`absolute ${
+                          emojiVisible ? "block" : "hidden"
+                        }`}
+                      >
+                        {emojiVisible && (
+                          <EmojiPicker
+                            height={400}
+                            width={300}
+                            onEmojiClick={onEmojiClick}
+                            // className="absolute"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={createPost}
+                disabled={!inputText.trim()}
+                className="bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-90 disabled:opacity-50"
+              >
+                {isLoading ? "Tweeting..." : "Tweet"}
+              </button>
+            </div>
           </div>
-          <button
-            onClick={createPost}
-            disabled={!inputText.trim()}
-            className="bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-90 disabled:opacity-50"
-          >
-            {isLoading ? "Tweeting..." : "Tweet"}
-          </button>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

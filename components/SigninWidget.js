@@ -1,8 +1,11 @@
-import { signIn } from "next-auth/react";
-import { ChevronDownIcon, DotsHorizontalIcon } from "@heroicons/react/outline";
+import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { AiFillApple, AiOutlineCopyrightCircle } from "react-icons/ai";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 const SigninWidget = (props) => {
+  const router = useRouter();
+
   const openModalHandler = () => {
     props.openModal();
   };
@@ -19,13 +22,14 @@ const SigninWidget = (props) => {
               Sign up now to get your own personalized timeline!
             </p>
             <div
-              onClick={() => signIn()}
+              onClick={() => router.push("/auth/signin")}
               className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
             >
-              <img
+              <Image
                 src="/assets/images/google-icon.png"
                 alt="google-logo"
                 width="30"
+                height="30"
                 className="p-1.5"
               />
               <p className="font-semibold ml-1">Sign in with Google</p>

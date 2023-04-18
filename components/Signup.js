@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillApple, AiOutlineClose } from "react-icons/ai";
-import Modal from "./UI/Modal";
 
 const Signup = ({ closeModal }) => {
   const onCloseModal = () => {
@@ -28,10 +27,11 @@ const Signup = ({ closeModal }) => {
           Join Twitter today
         </h2>
         <div className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800">
-          <img
+          <Image
             src="/assets/images/google-icon.png"
             alt="google-logo"
             width="30"
+            height="30"
             className="p-1.5"
           />
           <p className="font-semibold ml-1">Sign up with Google</p>

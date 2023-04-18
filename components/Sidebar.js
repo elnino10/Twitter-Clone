@@ -21,7 +21,7 @@ const Sidebar = forwardRef(
             alt="twitter-logo"
             width="30"
             height="30"
-          ></Image>
+          />
         </div>
         {isAuth ? (
           <div className="mt-1 mb-2.5 xl:items-start">
@@ -49,7 +49,7 @@ const Sidebar = forwardRef(
                 id={menuItem.id}
                 text={menuItem.text}
                 icon={menuItem.icon}
-                activeStyle={onActiveStyle}
+                onActiveStyle={onActiveStyle}
                 isActive={isActive}
                 activeMenu={activeMenuId}
                 ref={ref}
