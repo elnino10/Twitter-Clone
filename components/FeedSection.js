@@ -75,29 +75,49 @@ const FeedSection = ({ isAuth }) => {
       <InputFeed isAuth={isAuth} />
       <div>
         {posts?.map((post) => (
-          <Post key={post.id} post={post.data()} />
+          <Post key={post.id} post={post.data()} postId={post.id} />
         ))}
       </div>
       {isShown && (
-        <div className="flex flex-col items-start justify-between border py-3 px-4 sticky bottom-0 translate-x-[27rem] translate-y-[-3rem] bg-white rounded-md h-[80px] w-[150px] shadow">
-          <span className="text-sm hover:text-sky-500 cursor-pointer">
-            View Profile
-          </span>
-          <span
-            onClick={() => router.push("/auth/signout")}
-            className="text-sm hover:text-red-500 cursor-pointer"
-          >
-            Sign out
-          </span>
+        <div
+          className={`${
+            session
+              ? "flex flex-col items-start justify-between border py-3 px-4 sticky bottom-0 translate-x-[27rem] translate-y-[-3rem] bg-white rounded-md h-[80px] w-[150px] shadow"
+              : "flex flex-col items-center border py-3 px-4 sticky bottom-0 translate-x-[18rem] translate-y-[-3rem] bg-white rounded-md h-[50px] w-[150px] shadow"
+          }`}
+        >
+          {session && (
+            <span className="text-sm hover:text-sky-500 cursor-pointer">
+              View Profile
+            </span>
+          )}
+          {session ? (
+            <span
+              onClick={() => router.push("/auth/signout")}
+              className="text-sm"
+            >
+              Sign out
+            </span>
+          ) : (
+            <span
+              onClick={() => router.push("/auth/signin")}
+              className="text-sm"
+            >
+              Sign in
+            </span>
+          )}
         </div>
       )}
       {scrollDirection === "down" && (
         <div className="xl:hidden flex items-center justify-between h-12 p-2 mb-0 text-gray-800 border border-gray-200 sticky bottom-0 bg-white z-50">
-          <HomeIcon onClick={viewTopFeed} className="h-10" />
-          <SearchIcon onClick={showTrendsHandler} className="h-10" />
-          <BellIcon className="h-10" />
-          <MailIcon className="h-10" />
-          <DotsHorizontalIcon onClick={toggleProfilePage} className="h-10" />
+          <HomeIcon onClick={viewTopFeed} className="h-10 p-1.5" />
+          <SearchIcon onClick={showTrendsHandler} className="h-10 p-1.5" />
+          <BellIcon className="h-10 p-1.5" />
+          <MailIcon className="h-10 p-1.5" />
+          <DotsHorizontalIcon
+            onClick={toggleProfilePage}
+            className="h-10 p-1.5"
+          />
         </div>
       )}
     </section>

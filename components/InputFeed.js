@@ -53,7 +53,6 @@ const InputFeed = ({ isAuth }) => {
     if (isLoading) return;
     setIsLoading(true);
     const docRef = await addDoc(collection(db, "posts"), {
-      id: uuid(),
       userId: session.user.userid,
       text: inputText,
       name: session.user.name,
@@ -88,7 +87,6 @@ const InputFeed = ({ isAuth }) => {
   // select emoji picker
   const emojiPickerHandler = () => {
     setEmojiVisible((prev) => (prev = !prev));
-    console.log(emojiVisible);
   };
 
   const onEmojiClick = (emojiObject) => {
@@ -140,10 +138,10 @@ const InputFeed = ({ isAuth }) => {
                 />
               </div>
             )}
-            <div className="flex items-center justify-between pt-2">
+            <div className="relative flex items-center justify-between pt-2">
               <div className="flex">
                 {!isLoading && (
-                  <div className="relative flex">
+                  <div className="flex">
                     <div className="" onClick={addPostFile}>
                       <PhotographIcon className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer" />
                       <input
@@ -153,13 +151,13 @@ const InputFeed = ({ isAuth }) => {
                         onChange={addSelectedFile}
                       />
                     </div>
-                    <div>
+                    <div className="">
                       <EmojiHappyIcon
                         onClick={emojiPickerHandler}
                         className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer"
                       />
                       <div
-                        className={`absolute ${
+                        className={`absolute z-50 ${
                           emojiVisible ? "block" : "hidden"
                         }`}
                       >
@@ -168,7 +166,6 @@ const InputFeed = ({ isAuth }) => {
                             height={400}
                             width={300}
                             onEmojiClick={onEmojiClick}
-                            // className="absolute"
                           />
                         )}
                       </div>

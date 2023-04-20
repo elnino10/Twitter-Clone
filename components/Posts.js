@@ -1,15 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { db } from "@/firebase";
-import {
-  DotsHorizontalIcon,
-  ChatIcon,
-  TrashIcon,
-  HeartIcon,
-  ChartBarIcon,
-  ShareIcon,
-} from "@heroicons/react/outline";
-import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
-import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 import {
   collection,
   deleteDoc,
@@ -17,22 +9,35 @@ import {
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
-import { useSession } from "next-auth/react";
+import { deleteObject, ref } from "firebase/storage";
+import {
+  DotsHorizontalIcon,
+  ChatIcon,
+  HeartIcon,
+  ChartBarIcon,
+  ShareIcon,
+} from "@heroicons/react/outline";
+import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
+import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 import Image from "next/image";
 import Moment from "react-moment";
-import { useRouter } from "next/router";
+import Alert from "./UI/Alert";
 
-const Posts = ({ post }) => {
+const Posts = ({ post, postId }) => {
   const [userLikes, setUserLikes] = useState(false);
   const [postLikes, setPostLikes] = useState([]);
   const [numLikes, setNumLikes] = useState(null);
   const [panelShown, setPanelShown] = useState(false);
+  const [alertShown, setAlertShown] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+  const deletePostRef = useRef();
+
+  // console.log(deletePostRef.current.confirmDelete());
 
   // get all likes for a post
   useEffect(() => {
-    onSnapshot(collection(db, "posts", post.id, "likes"), (snapshot) => {
+    onSnapshot(collection(db, "posts", postId, "likes"), (snapshot) => {
       setPostLikes(
         snapshot.docs.map((item) => {
           return { ...item.data(), id: item.id };
@@ -56,11 +61,11 @@ const Posts = ({ post }) => {
       // if user liked the post, remove like, else, set as liked
       if (userLikes) {
         await deleteDoc(
-          doc(db, "posts", post.id, "likes", session?.user.userid)
+          doc(db, "posts", postId, "likes", session?.user.userid)
         );
       } else {
         await setDoc(
-          doc(db, "posts", post.id, "likes", session?.user.userid),
+          doc(db, "posts", postId, "likes", session?.user.userid),
           {
             username: session?.user.username,
           },
@@ -89,11 +94,32 @@ const Posts = ({ post }) => {
     //   setPanelShown((currState) => currState === true && false);
   };
 
+  const alertDisplayHandler = () => {
+    setAlertShown(true);
+    setPanelShown(false);
+  };
+
+  // useEffect(() => {
+  //   const deletePostHandler = async () => {
+  //     if (deletePostRef.current.confirmDelete()) {
+  //       await deleteDoc(doc(db, "posts", postId));
+  //       await deleteObject(ref(storage, `posts/${postId}/image`));
+  //       setAlertShown(false);
+  //     }
+  //   };
+  //   deletePostHandler;
+  // }, [postId]);
+
   return (
     <div
       onClick={closeActionPanel}
       className="flex flex-col p-2 border-b border-gray-200"
     >
+      {alertShown && (
+        <Alert ref={deletePostRef} type="error">
+          <p>Deleting post?</p>
+        </Alert>
+      )}
       <div className="flex items-center relative">
         <div className="w-[50px] p-2">
           <Image
@@ -128,13 +154,22 @@ const Posts = ({ post }) => {
           </span>
         </div>
         {panelShown && (
-          <div className="flex flex-col items-start translate-x-[460px] border py-1 px-4 rounded-md absolute shadow">
-            <span className="text-sm hover:text-sky-500 cursor-pointer">
+          <div className="flex flex-col items-start justify-between translate-x-[435px] w-[100px] translate-y-3 h-[70px] border py-2 px-4 rounded-md absolute shadow">
+            <span className="text-md hover:text-sky-500 cursor-pointer">
               Edit
             </span>
-            <span className="text-sm hover:text-red-500 cursor-pointer">
-              Delete
-            </span>
+            {session?.user.userid === post.userId ? (
+              <span
+                onClick={alertDisplayHandler}
+                className="text-md hover:text-red-500 cursor-pointer"
+              >
+                Delete
+              </span>
+            ) : (
+              <span className="text-md hover:text-red-500 cursor-pointer">
+                Report
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -150,6 +185,7 @@ const Posts = ({ post }) => {
               src={post.fileURL}
               alt="post-image"
               sizes="auto"
+              priority
               className="m-auto w-full p-5"
             />
           )}
