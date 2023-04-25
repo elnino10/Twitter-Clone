@@ -17,7 +17,7 @@ const Signin = (props) => {
     const dataValue = e.currentTarget.getAttribute("data-value");
     const inputValue = inputRef.current.value;
     if (dataValue !== "input") {
-      setIsClicked(false);
+      setIsClicked(false); 
     }
     if (inputValue.length > 0) {
       setIsEmpty(false);

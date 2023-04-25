@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { db } from "@/firebase";
+import { db, storage } from "@/firebase";
 import {
   collection,
   deleteDoc,
@@ -31,9 +31,6 @@ const Posts = ({ post, postId }) => {
   const [alertShown, setAlertShown] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-  const deletePostRef = useRef();
-
-  // console.log(deletePostRef.current.confirmDelete());
 
   // get all likes for a post
   useEffect(() => {
@@ -82,16 +79,16 @@ const Posts = ({ post, postId }) => {
   const toggleActionPanel = (e) => {
     e.preventDefault();
     const dataValue = e.currentTarget.getAttribute("data-value");
-    if (dataValue === "panel")
-      setPanelShown((currState) => (currState === false ? true : false));
+    if (dataValue === "panel") setPanelShown((currState) => !currState);
   };
 
   // click around the body closes edit/delete panel
   const closeActionPanel = (e) => {
     e.preventDefault();
     const dataValue = e.currentTarget.getAttribute("data-value");
-    // if (dataValue !== "panel")
-    //   setPanelShown((currState) => currState === true && false);
+    if (panelShown) {
+      if (dataValue !== "panel") setPanelShown(false);
+    }
   };
 
   const alertDisplayHandler = () => {
@@ -99,16 +96,16 @@ const Posts = ({ post, postId }) => {
     setPanelShown(false);
   };
 
-  // useEffect(() => {
-  //   const deletePostHandler = async () => {
-  //     if (deletePostRef.current.confirmDelete()) {
-  //       await deleteDoc(doc(db, "posts", postId));
-  //       await deleteObject(ref(storage, `posts/${postId}/image`));
-  //       setAlertShown(false);
-  //     }
-  //   };
-  //   deletePostHandler;
-  // }, [postId]);
+  const closeAlertHandler = () => {
+    setAlertShown(false);
+  };
+
+  const deletePostHandler = async () => {
+    await deleteDoc(doc(db, "posts", postId));
+    if (storage / Object)
+      await deleteObject(ref(storage, `posts/${postId}/image`));
+    setAlertShown(false);
+  };
 
   return (
     <div
@@ -116,7 +113,13 @@ const Posts = ({ post, postId }) => {
       className="flex flex-col p-2 border-b border-gray-200"
     >
       {alertShown && (
-        <Alert ref={deletePostRef} type="error">
+        <Alert
+          // ref={deletePostRef}
+          alertShown={alertShown}
+          onCloseAlert={closeAlertHandler}
+          onDelete={deletePostHandler}
+          type="error"
+        >
           <p>Deleting post?</p>
         </Alert>
       )}

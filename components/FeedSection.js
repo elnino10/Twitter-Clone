@@ -31,7 +31,7 @@ const FeedSection = ({ isAuth }) => {
   };
 
   useEffect(() => {
-    getPosts();
+    posts && getPosts();
   }, []);
 
   useEffect(() => {
