@@ -14,6 +14,7 @@ import Signup from "@/components/Signup";
 import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
 import TrendsPage from "@/components/TrendsPage";
 import { useRouter } from "next/router";
+import CommentModal from "@/components/CommentModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -84,7 +85,7 @@ export default function Home({ newsData, userData }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rl="icon" href="/favicon.ico" />
       </Head>
-      <main>
+      <main className="scroll-smooth">
         <div className="flex min-h-screen mx-auto relative">
           {/* Sidebar */}
           <Sidebar
@@ -113,6 +114,9 @@ export default function Home({ newsData, userData }) {
           />
 
           {/* Modal */}
+
+          <CommentModal />
+
           <Modal
             isVisible={showSigninModal}
             closeModal={closeSigninModalHandler}

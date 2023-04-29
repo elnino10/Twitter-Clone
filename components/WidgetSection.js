@@ -3,6 +3,7 @@ import { useState } from "react";
 import FollowSuggestion from "./FollowSuggestion";
 import NewsWidget from "./NewsWidget";
 import SigninWidget from "./SigninWidget";
+import { AnimatePresence, motion } from "framer-motion";
 
 const WidgetSection = ({ newsData, userData, isAuth, openModal }) => {
   const [showNews, setShowNews] = useState(3);
@@ -19,7 +20,7 @@ const WidgetSection = ({ newsData, userData, isAuth, openModal }) => {
   return (
     <>
       {isAuth ? (
-        <section className="xl:w-[500px] hidden lg:inline space-y-5 relative bg-white py-1.5 z-50 p-4">
+        <section className="xl:w-[500px] hidden lg:inline space-y-5 relative bg-white py-1.5 p-4">
           <div className="flex items-center w-[90%] xl:w-[65%] p-3 rounded-full sticky top-0">
             <SearchIcon className="h-5 z-50 text-gray-500" />
             <input
@@ -32,18 +33,23 @@ const WidgetSection = ({ newsData, userData, isAuth, openModal }) => {
             <div className="">
               <h4 className="font-bold text-xl p-2">{"What's trending"}</h4>
             </div>
-            <div>
+            <AnimatePresence>
               {newsData.slice(0, showNews).map((data) => (
-                <NewsWidget
+                <motion.div
                   key={
                     data.source.id !== null
                       ? data.source.id
                       : Math.random() * 100
                   }
-                  props={data}
-                />
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <NewsWidget props={data} />
+                </motion.div>
               ))}
-            </div>
+            </AnimatePresence>
             <button
               className="pl-2 pb-2 text-blue-400 hover:text-blue-500"
               onClick={showNewsHandler}

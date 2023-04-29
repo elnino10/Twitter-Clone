@@ -22,6 +22,8 @@ import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 import Image from "next/image";
 import Moment from "react-moment";
 import Alert from "./UI/Alert";
+import { useRecoilState } from "recoil";
+import { getPostState, modalState } from "@/atom/modalAtom";
 
 const Posts = ({ post, postId }) => {
   const [userLikes, setUserLikes] = useState(false);
@@ -29,8 +31,10 @@ const Posts = ({ post, postId }) => {
   const [numLikes, setNumLikes] = useState(null);
   const [panelShown, setPanelShown] = useState(false);
   const [alertShown, setAlertShown] = useState(false);
+  const [comments, setComments] = useState([]);
   const { data: session } = useSession();
   const router = useRouter();
+  const [openModal, setOpenModal] = useRecoilState(modalState);
 
   // get all likes for a post
   useEffect(() => {
@@ -50,6 +54,13 @@ const Posts = ({ post, postId }) => {
     );
     setNumLikes(postLikes.length > 0 && postLikes.length);
   }, [postLikes, session?.user.userid]);
+
+  // get available comments and set the number of comments if available
+  useEffect(() => {
+    onSnapshot(collection(db, "posts", postId, "comments"), (snapShot) => {
+      setComments(snapShot.docs);
+    });
+  }, [postId]);
 
   // check for user like in post
   const likeHandler = async () => {
@@ -77,18 +88,21 @@ const Posts = ({ post, postId }) => {
 
   // show edit/delete panel
   const toggleActionPanel = (e) => {
-    e.preventDefault();
+    e.stopPropagation();
     const dataValue = e.currentTarget.getAttribute("data-value");
-    if (dataValue === "panel") setPanelShown((currState) => !currState);
+    if (dataValue === "panel") {
+      return setPanelShown((currState) => !currState);
+    }
   };
 
   // click around the body closes edit/delete panel
-  const closeActionPanel = (e) => {
-    e.preventDefault();
+  const postClickHandler = (e) => {
+    e.stopPropagation();
     const dataValue = e.currentTarget.getAttribute("data-value");
-    if (panelShown) {
-      if (dataValue !== "panel") setPanelShown(false);
+    if (panelShown && dataValue !== "panel") {
+      return setPanelShown(false);
     }
+    if (!panelShown && !alertShown) router.push(`/posts/${postId}`);
   };
 
   const alertDisplayHandler = () => {
@@ -102,19 +116,30 @@ const Posts = ({ post, postId }) => {
 
   const deletePostHandler = async () => {
     await deleteDoc(doc(db, "posts", postId));
-    if (storage / Object)
-      await deleteObject(ref(storage, `posts/${postId}/image`));
+    if (post.image) await deleteObject(ref(storage, `posts/${postId}/image`));
     setAlertShown(false);
   };
 
+  // post a comment on a post if signed in, else redirect to sign in page
+  const commentHandler = () => {
+    if (!session) {
+      router.push("/auth/signin");
+    } else {
+      setPostId(postId);
+      setOpenModal(!openModal);
+    }
+  };
+
+  // update an existing post
+  const updatePostHandler = () => {};
+
   return (
     <div
-      onClick={closeActionPanel}
-      className="flex flex-col p-2 border-b border-gray-200"
+      onClick={postClickHandler}
+      className="flex flex-col p-2 border-b border-gray-200 cursor-pointer"
     >
       {alertShown && (
         <Alert
-          // ref={deletePostRef}
           alertShown={alertShown}
           onCloseAlert={closeAlertHandler}
           onDelete={deletePostHandler}
@@ -157,17 +182,22 @@ const Posts = ({ post, postId }) => {
           </span>
         </div>
         {panelShown && (
-          <div className="flex flex-col items-start justify-between translate-x-[435px] w-[100px] translate-y-3 h-[70px] border py-2 px-4 rounded-md absolute shadow">
-            <span className="text-md hover:text-sky-500 cursor-pointer">
-              Edit
-            </span>
+          <div className="translate-x-[435px] w-[100px] translate-y-3 h-auto border py-2 px-4 rounded-md absolute shadow">
             {session?.user.userid === post.userId ? (
-              <span
-                onClick={alertDisplayHandler}
-                className="text-md hover:text-red-500 cursor-pointer"
-              >
-                Delete
-              </span>
+              <div className="flex flex-col items-start justify-between">
+                <span
+                  onClick={updatePostHandler}
+                  className="text-md hover:text-sky-500 cursor-pointer"
+                >
+                  Edit
+                </span>
+                <span
+                  onClick={alertDisplayHandler}
+                  className="text-md hover:text-red-500 cursor-pointer"
+                >
+                  Delete
+                </span>
+              </div>
             ) : (
               <span className="text-md hover:text-red-500 cursor-pointer">
                 Report
@@ -196,8 +226,11 @@ const Posts = ({ post, postId }) => {
         <div className="flex items-center justify-between h-10 my-1 text-gray-500 p-2">
           <div className="">
             <div className="flex items-center hover:text-sky-500 peer">
-              <ChatIcon className="h-10 w-10 p-2 menuHoverEffect hover:bg-sky-100" />
-              <span className="text-xs w-5">12</span>
+              <ChatIcon
+                onClick={commentHandler}
+                className="h-10 w-10 p-2 menuHoverEffect hover:bg-sky-100"
+              />
+              <span className="text-xs w-5">{comments.length > 0 && comments.length}</span>
             </div>
             <span className="absolute ml-0.5 text-xs bg-gray-500 text-white rounded-sm px-1 py-0.5 invisible peer-hover:visible delay-300 ease-in">
               Reply

@@ -70,13 +70,13 @@ const Sidebar = forwardRef(
             <Image
               width="48"
               height="48"
-              src={session.user.image}
+              src={session?.user.image}
               alt="profile-image"
               className="rounded-full xl:mr-2 peer"
             />
             <div className="leading-5 hidden xl:inline peer">
-              <h4 className="font-bold">{session.user.name}</h4>
-              <p className="text-gray-500">@{session.user.username}</p>
+              <h4 className="font-bold">{session?.user.name}</h4>
+              <p className="text-gray-500">@{session?.user.username}</p>
             </div>
             <DotsHorizontalIcon className="h-5 ml-2 hidden xl:inline peer" />
             <span className="text-xs bg-gray-600 text-white rounded p-1 invisible peer-hover:visible delay-300 ease-in absolute translate-x-2 translate-y-[-50px]">
