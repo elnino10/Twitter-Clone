@@ -52,7 +52,6 @@ export default function Home({ newsData, userData }) {
           setIsActive(true);
         }
       });
-    console.log(activeMenuRef.current.id);
   };
 
   useEffect(() => {
@@ -85,7 +84,7 @@ export default function Home({ newsData, userData }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rl="icon" href="/favicon.ico" />
       </Head>
-      <main className="scroll-smooth">
+      <main className="">
         <div className="flex min-h-screen mx-auto relative">
           {/* Sidebar */}
           <Sidebar

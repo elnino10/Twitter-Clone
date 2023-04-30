@@ -1,7 +1,9 @@
 /* eslint-disable react/display-name */
+import { useRouter } from "next/router";
 import { forwardRef, useCallback } from "react";
 
 const SidebarMenu = forwardRef((props, ref) => {
+  const router = useRouter();
   const menuSelector = useCallback(
     (id) => {
       props.onActiveStyle(id);

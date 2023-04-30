@@ -34,7 +34,7 @@ const WidgetSection = ({ newsData, userData, isAuth, openModal }) => {
               <h4 className="font-bold text-xl p-2">{"What's trending"}</h4>
             </div>
             <AnimatePresence>
-              {newsData.slice(0, showNews).map((data) => (
+              {newsData?.slice(0, showNews).map((data) => (
                 <motion.div
                   key={
                     data.source.id !== null
@@ -59,7 +59,7 @@ const WidgetSection = ({ newsData, userData, isAuth, openModal }) => {
           </div>
           <div className="sticky top-16 text-gray-700 bg-gray-100 rounded-xl w-[90%] xl:w-[65%] mt-3 space-y-3 pt-4">
             <h4 className="font-bold text-xl px-2">Who to follow</h4>
-            {userData.slice(0, showUsers).map((user) => (
+            {userData?.slice(0, showUsers).map((user) => (
               <FollowSuggestion key={user.login.username} user={user} />
             ))}
             <button

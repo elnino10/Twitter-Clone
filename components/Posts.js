@@ -23,7 +23,7 @@ import Image from "next/image";
 import Moment from "react-moment";
 import Alert from "./UI/Alert";
 import { useRecoilState } from "recoil";
-import { getPostState, modalState } from "@/atom/modalAtom";
+import {  modalState } from "@/atom/modalAtom";
 
 const Posts = ({ post, postId }) => {
   const [userLikes, setUserLikes] = useState(false);
