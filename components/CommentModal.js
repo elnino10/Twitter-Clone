@@ -1,5 +1,5 @@
-import { useRecoilState } from "recoil";
-import { getPostState, modalState } from "@/atom/modalAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { idState, modalState } from "@/atom/modalAtom";
 import Modal from "react-modal";
 import {
   EmojiHappyIcon,
@@ -23,29 +23,32 @@ import { useRouter } from "next/router";
 
 const CommentModal = () => {
   const [openModal, setOpenModal] = useRecoilState(modalState);
-  const [getPostId] = useRecoilState(getPostState);
-  const [posts, setPosts] = useState({});
+  const [getId] = useRecoilState(idState);
+  const [post, setPost] = useState({});
   const [inputText, setInputText] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
 
+  // get post with the id: getPostId
   useEffect(() => {
-    onSnapshot(doc(db, "posts", getPostId), (snapShot) => {
-      setPosts(snapShot);
+    onSnapshot(doc(db, "posts", getId), (snapShot) => {
+      setPost(snapShot);
     });
-  }, [getPostId]);
+  }, [getId]);
 
-  const createComment = async () => {
-    await addDoc(collection(db, "posts", posts.id, "comments"), {
-      comment: inputText,
+  // create a reply for post
+  const createReply = async () => {
+    await addDoc(collection(db, "posts", getId, "comments"), {
+      userId: session.user.userid,
       name: session.user.name,
-      userImage: session.user.image,
       username: session.user.username,
+      userImage: session.user.image,
+      reply: inputText,
       timestamp: serverTimestamp(),
     });
     setOpenModal(false);
     setInputText("");
-    // router.push(`/posts/${getPostId}`);
+    router.push(`/posts/${getId}`);
   };
 
   return (
@@ -68,9 +71,9 @@ const CommentModal = () => {
           <div className="flex items-center mb-3">
             <div className="w-[50px] p-2">
               <Image
+                src={post?.data()?.userImage}
                 width="50"
                 height="50"
-                src={posts.data()?.userImage}
                 alt="user-image"
                 className="rounded-full w-full"
               />
@@ -79,19 +82,19 @@ const CommentModal = () => {
               <div className="flex items-center space-x-1 whitespace-nowrap">
                 {/* user info */}
                 <h4 className="font-bold text-[15px] sm:text-[16px] cursor-pointer hover:text-gray-700 hover:underline text-ellipsis overflow-hidden">
-                  {posts.data()?.name}
+                  {post?.data()?.name}
                 </h4>
                 <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
-                  @{posts.data()?.username}
+                  @{post?.data()?.username}
                 </span>
                 <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
                   {" "}
-                  - <Moment fromNow>{posts?.timestamp?.toDate()}</Moment>
+                  - <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
                 </span>
               </div>
               <div>
                 <p className="text-gray-500 text-[15px] sm:text-[16px] mt-1">
-                  {posts.data()?.text}
+                  {post?.data()?.text}
                 </p>
               </div>
             </div>
@@ -171,7 +174,7 @@ const CommentModal = () => {
                       </div>
                     </div>
                     <button
-                      onClick={createComment}
+                      onClick={createReply}
                       disabled={!inputText.trim()}
                       className="bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-90 disabled:opacity-50"
                     >

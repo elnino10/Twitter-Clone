@@ -1,8 +1,8 @@
 /* eslint-disable react/display-name */
 import { useRouter } from "next/router";
-import { forwardRef, useCallback } from "react";
+import { useCallback } from "react";
 
-const SidebarMenu = forwardRef((props, ref) => {
+const SidebarMenu = (props, ref) => {
   const router = useRouter();
   const menuSelector = useCallback(
     (id) => {
@@ -17,7 +17,6 @@ const SidebarMenu = forwardRef((props, ref) => {
 
   return (
     <div
-      ref={ref}
       id={props.id}
       className="menuHoverEffect flex items-center text-gray-900 justify-center xl:justify-start text-xl space-x-3"
       onClick={selectMenuHandler.bind(null, props.id)}
@@ -32,6 +31,6 @@ const SidebarMenu = forwardRef((props, ref) => {
       </span>
     </div>
   );
-});
+};
 
 export default SidebarMenu;

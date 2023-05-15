@@ -1,11 +1,11 @@
-import PostPage from "@/components/PostPage";
+import PostSection from "@/components/PostSection";
 import axios from "axios";
 import React from "react";
 
 const postPage = ({ newsData, userData }) => {
   return (
     <div>
-      <PostPage newsData={newsData} userData={userData} />
+      <PostSection newsData={newsData} userData={userData} />
     </div>
   );
 };

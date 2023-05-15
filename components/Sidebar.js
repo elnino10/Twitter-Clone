@@ -38,7 +38,6 @@ const Sidebar = ({
                 onActiveStyle={onActiveStyle}
                 isActive={isActive}
                 activeMenu={activeMenuId}
-                // ref={ref}
               />
             ))}
         </div>
@@ -54,7 +53,6 @@ const Sidebar = ({
               onActiveStyle={onActiveStyle}
               isActive={isActive}
               activeMenu={activeMenuId}
-              // ref={ref}
             />
           ))}
         </div>

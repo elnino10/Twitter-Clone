@@ -5,7 +5,12 @@ export const modalState= atom({
     default: false
 })
 
-export const getPostState= atom({
-    key: "get[PostState",
+export const idState= atom({
+    key: "idState",
     default: "id"
+})
+
+export const panelState= atom({
+    key: "panelState",
+    default: false
 })

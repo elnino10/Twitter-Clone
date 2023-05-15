@@ -7,13 +7,11 @@ import Sidebar from "@/components/Sidebar";
 import FeedSection from "@/components/FeedSection";
 import WidgetSection from "@/components/WidgetSection";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import Modal from "@/components/UI/Modal";
 import SigninModal from "@/components/SigninModal";
 import Signup from "@/components/Signup";
 import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
 import TrendsPage from "@/components/TrendsPage";
-import { useRouter } from "next/router";
 import CommentModal from "@/components/CommentModal";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,7 +24,6 @@ export default function Home({ newsData, userData }) {
   const [activeMenuId, setActiveMenuId] = useState("");
   const { data: session } = useSession();
   const activeMenuRef = useRef(null);
-  const router = useRouter();
 
   // sets the active menu
   useEffect(() => {
@@ -113,7 +110,6 @@ export default function Home({ newsData, userData }) {
           />
 
           {/* Modal */}
-
           <CommentModal />
 
           <Modal

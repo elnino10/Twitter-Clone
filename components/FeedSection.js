@@ -13,8 +13,10 @@ import {
 import { HomeIcon } from "@heroicons/react/solid";
 import { useScrollDirection } from "@/useScrollDirection";
 import InputFeed from "./InputFeed";
-import Post from "./Posts";
+import Post from "./Post";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRecoilState } from "recoil";
+import { getPostState } from "@/atom/modalAtom";
 
 const FeedSection = ({ isAuth }) => {
   const [posts, setPosts] = useState([]);
@@ -117,7 +119,7 @@ const FeedSection = ({ isAuth }) => {
           )}
         </div>
       )}
-      {scrollDirection === "down" && (
+      {scrollDirection === "up" && (
         <div className="xl:hidden flex items-center justify-between h-12 p-2 mb-0 text-gray-800 border border-gray-200 sticky bottom-0 bg-white z-50">
           <HomeIcon onClick={viewTopFeed} className="h-10 p-1.5" />
           <SearchIcon onClick={showTrendsHandler} className="h-10 p-1.5" />

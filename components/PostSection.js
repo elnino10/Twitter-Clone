@@ -1,20 +1,47 @@
+import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { Inter } from "next/font/google";
 import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
 import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
 import PostDetails from "./PostDetails";
 import Sidebar from "./Sidebar";
 import WidgetSection from "./WidgetSection";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function PostPage({ newsData, userData }) {
+export default function PostSection({ newsData, userData }) {
   const [isAuth, setIsAuth] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState("");
+  const [postDetails, setPostDetails] = useState();
+  const [postLikes, setPostLikes] = useState([]);
   const { data: session } = useSession();
-  const activeMenuRef = useRef(null);
+  // const activeMenuRef = useRef(null);
+  const router = useRouter();
+
+  const { postId } = router.query;
+
+  // get the post information
+  useEffect(() => {
+    postId &&
+      onSnapshot(doc(db, "posts", postId), (snapShot) =>
+        setPostDetails(snapShot)
+      );
+  }, [postId]);
+
+  // get all likes for a post
+  // useEffect(() => {
+  //   onSnapshot(collection(db, "posts", postId, "likes"), (snapshot) => {
+  //     setPostLikes(
+  //       snapshot.docs.map((item) => {
+  //         return { ...item.data(), id: item.id };
+  //       })
+  //     );
+  //   });
+  // }, []);
 
   // sets the active menu
   useEffect(() => {
@@ -58,11 +85,10 @@ export default function PostPage({ newsData, userData }) {
       </Head>
       <main className="">
         <div className="flex min-h-screen mx-auto relative">
-
           {/* Sidebar */}
           <Sidebar
             isAuth={isAuth}
-            ref={activeMenuRef}
+            // ref={activeMenuRef}
             menuItems={menuItems}
             menuItemsAuth={menuItemsAuth}
             isActive={isActive}
@@ -71,7 +97,12 @@ export default function PostPage({ newsData, userData }) {
           />
 
           {/* Post */}
-          <PostDetails />
+          <PostDetails
+            postId={postId}
+            post={postDetails?.data()}
+            postLikes={postLikes}
+            db={db}
+          />
 
           {/* Widgets */}
           <WidgetSection
