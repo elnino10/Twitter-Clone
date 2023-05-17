@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { db, storage } from "@/firebase";
@@ -25,7 +25,7 @@ import Alert from "./UI/Alert";
 import { useRecoilState } from "recoil";
 import { idState, modalState } from "@/atom/modalAtom";
 
-const Posts = ({ post, postId }) => {
+const Posts = ({ post, postId, onSetLoading }) => {
   const [userLikes, setUserLikes] = useState(false);
   const [postLikes, setPostLikes] = useState([]);
   const [numLikes, setNumLikes] = useState(null);
@@ -103,7 +103,11 @@ const Posts = ({ post, postId }) => {
     if (panelShown && dataValue !== "panel") {
       return setPanelShown(false);
     }
-    if (!panelShown && !alertShown) router.push(`/posts/${postId}`);
+    if (!panelShown && !alertShown) {
+      window.scrollTo(0, 0);
+      router.push(`/posts/${postId}`);
+      onSetLoading(true);
+    }
   };
 
   const alertDisplayHandler = () => {
@@ -121,7 +125,7 @@ const Posts = ({ post, postId }) => {
     setAlertShown(false);
   };
 
-  // post a comment on a post if signed in, else redirect to sign in page
+  // open comment modal if signed in, else redirect to sign in page
   const commentHandler = (e) => {
     e.stopPropagation();
     if (!session) {

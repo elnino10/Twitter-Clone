@@ -15,47 +15,59 @@ import { useScrollDirection } from "@/useScrollDirection";
 import InputFeed from "./InputFeed";
 import Post from "./Post";
 import { AnimatePresence, motion } from "framer-motion";
+import LoadingIndicator from "./UI/LoadingIndicator";
 import { useRecoilState } from "recoil";
-import { getPostState } from "@/atom/modalAtom";
+import { loadingState, modalState } from "@/atom/modalAtom";
 
 const FeedSection = ({ isAuth }) => {
   const [posts, setPosts] = useState([]);
-  const [isShown, setIsShown] = useState(false);
+  const [bottomMenuIsShown, setBottomMenuIsShown] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
   const ref = useRef();
   const scrollDirection = useScrollDirection(ref);
+  const [isLoading, setLoading] = useRecoilState(loadingState);
+  const [openCommentModal, setOpenCommentModal] = useRecoilState(modalState)
 
+
+  // get all posts from database
   const getPosts = () => {
     onSnapshot(
       query(collection(db, "posts"), orderBy("timestamp", "desc")),
-      (data) => setPosts(data.docs)
+      (data) => {
+        setPosts(data.docs);
+        setLoading(false);
+      }
     );
   };
 
   useEffect(() => {
+    setLoading(true);
     posts && getPosts();
   }, []);
 
+  // check for scroll direction
   useEffect(() => {
-    if (scrollDirection === "up") setIsShown(false);
+    if (scrollDirection === "up") setBottomMenuIsShown(false);
   }, [scrollDirection]);
 
   const toggleProfilePage = () => {
-    setIsShown((prev) => !prev);
+    setBottomMenuIsShown(!bottomMenuIsShown);
   };
 
   const showTrendsHandler = () => {
     router.push("/trending");
+    setLoading(true)
   };
 
+  // scroll to top
   const viewTopFeed = () => {
     window.scrollTo(0, 0);
   };
 
   return (
     <section className="sm:ml-24 xl:ml-[25rem] border-black-100 border-l border-r shadow mt-1 flex-grow max-w-[597px] relative">
-      <div className="flex items-center justify-between p-2 border-b border-gray-200 sticky top-0 bg-white z-40">
+      <div className={` ${!openCommentModal ? "z-10 sticky top-0" : ""} flex items-center justify-between p-2 border-b border-gray-200 bg-white`}>
         <h2 className="text-lg sm:text-xl font-bold cursor-pointer">Home</h2>
         <div className="cursor-pointer hover:bg-gray-100 rounded-full sm:p-2 w-20 h-10 flex items-center">
           <SparklesIcon
@@ -75,21 +87,29 @@ const FeedSection = ({ isAuth }) => {
           )}
         </div>
       </div>
-      <InputFeed isAuth={isAuth} />
-      <AnimatePresence>
-        {posts?.map((post) => (
-          <motion.div
-            key={post.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Post post={post.data()} postId={post.id} />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-      {isShown && (
+
+      {isLoading ? (
+          <LoadingIndicator />
+      ) : (
+        <div className="">
+          <InputFeed isAuth={isAuth} />
+          <AnimatePresence>
+            {posts?.map((post) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Post post={post.data()} postId={post.id} onSetLoading={setLoading} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
+
+      {bottomMenuIsShown && (
         <div
           className={`${
             session
@@ -119,7 +139,7 @@ const FeedSection = ({ isAuth }) => {
           )}
         </div>
       )}
-      {scrollDirection === "up" && (
+      {scrollDirection === "up" && !isLoading && (
         <div className="xl:hidden flex items-center justify-between h-12 p-2 mb-0 text-gray-800 border border-gray-200 sticky bottom-0 bg-white z-50">
           <HomeIcon onClick={viewTopFeed} className="h-10 p-1.5" />
           <SearchIcon onClick={showTrendsHandler} className="h-10 p-1.5" />

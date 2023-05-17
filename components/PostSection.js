@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Inter } from "next/font/google";
@@ -7,8 +7,12 @@ import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
 import PostDetails from "./PostDetails";
 import Sidebar from "./Sidebar";
 import WidgetSection from "./WidgetSection";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase";
+import CommentModal from "./CommentModal";
+import Backdrop from "./UI/Backdrop";
+import { useRecoilState } from "recoil";
+import { modalState } from "@/atom/modalAtom";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,8 +23,9 @@ export default function PostSection({ newsData, userData }) {
   const [postDetails, setPostDetails] = useState();
   const [postLikes, setPostLikes] = useState([]);
   const { data: session } = useSession();
-  // const activeMenuRef = useRef(null);
   const router = useRouter();
+
+  const [openModal, setOpenModal] = useRecoilState(modalState);
 
   const { postId } = router.query;
 
@@ -33,15 +38,15 @@ export default function PostSection({ newsData, userData }) {
   }, [postId]);
 
   // get all likes for a post
-  // useEffect(() => {
-  //   onSnapshot(collection(db, "posts", postId, "likes"), (snapshot) => {
-  //     setPostLikes(
-  //       snapshot.docs.map((item) => {
-  //         return { ...item.data(), id: item.id };
-  //       })
-  //     );
-  //   });
-  // }, []);
+  useEffect(() => {
+    onSnapshot(collection(db, "posts", postId, "likes"), (snapshot) => {
+      setPostLikes(
+        snapshot.docs.map((item) => {
+          return { ...item, id: item.id };
+        })
+      );
+    });
+  }, []);
 
   // sets the active menu
   useEffect(() => {
@@ -88,13 +93,17 @@ export default function PostSection({ newsData, userData }) {
           {/* Sidebar */}
           <Sidebar
             isAuth={isAuth}
-            // ref={activeMenuRef}
             menuItems={menuItems}
             menuItemsAuth={menuItemsAuth}
             isActive={isActive}
             activeMenuId={activeMenuId}
             onActiveStyle={activeStyleHandler}
           />
+          {/* comment modal */}
+          <CommentModal />
+
+          {/* Modal Backdrop */}
+          {openModal && <Backdrop />}
 
           {/* Post */}
           <PostDetails

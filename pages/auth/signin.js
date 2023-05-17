@@ -1,5 +1,4 @@
 import Signin from "@/components/Signin";
-import SigninWidget from "@/components/SigninWidget";
 import { getProviders, signIn } from "next-auth/react";
 import { Fragment } from "react";
 

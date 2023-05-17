@@ -3,12 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiFillApple, AiOutlineClose } from "react-icons/ai";
 import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { signinState } from "@/atom/modalAtom";
 
-const Signin = (props) => {
+const SigninModal = (props) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const inputRef = useRef(null);
   const router = useRouter();
+
+  const [signinClicked, setSigninClicked] = useRecoilState(signinState);
 
   // removes the effect of clicking on the input by clicking on it's parent element
   const removeClickEffect = (e) => {
@@ -39,6 +43,10 @@ const Signin = (props) => {
     props.onCloseModal();
   };
 
+  const signinClickHandler = () => {
+    setSigninClicked(true)
+  };
+
   let display = "hidden";
 
   return (
@@ -65,7 +73,7 @@ const Signin = (props) => {
           Sign in to continue on Twitter
         </h2>
         <div
-          onClick={() => router.push("/auth/signin")}
+          onClick={/*() => router.push("/auth/signin")*/ signinClickHandler}
           className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
         >
           <Image
@@ -139,4 +147,4 @@ const Signin = (props) => {
   );
 };
 
-export default Signin;
+export default SigninModal;

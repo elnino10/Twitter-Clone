@@ -1,8 +1,8 @@
 /* eslint-disable react/display-name */
 import { useRouter } from "next/router";
 import { useCallback } from "react";
-
-const SidebarMenu = (props, ref) => {
+ 
+const SidebarMenu = (props) => {
   const router = useRouter();
   const menuSelector = useCallback(
     (id) => {

@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillApple } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
+import { useRecoilState } from "recoil";
+import { signinState } from "@/atom/modalAtom";
 
 const Signin = (props) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -11,13 +13,21 @@ const Signin = (props) => {
   const inputRef = useRef(null);
   const router = useRouter();
 
+  const [signinClicked, setSigninClicked] = useRecoilState(signinState);
+
+  useEffect(() => {
+    if (signinClicked) {
+      props.signIn(props.provider.id, { callbackUrl: "/" })
+    }
+  }, [props, signinClicked]);
+
   // removes the effect of clicking on the input by clicking on it's parent element
   const removeClickEffect = (e) => {
     e.preventDefault();
     const dataValue = e.currentTarget.getAttribute("data-value");
     const inputValue = inputRef.current.value;
     if (dataValue !== "input") {
-      setIsClicked(false); 
+      setIsClicked(false);
     }
     if (inputValue.length > 0) {
       setIsEmpty(false);
@@ -34,6 +44,11 @@ const Signin = (props) => {
     if (dataValue === "input") {
       setIsClicked(true);
     }
+  };
+
+  // set signinState to true if clicked
+  const signinClickHandler = () => {
+    setSigninClicked(true);
   };
 
   let display = "hidden";
@@ -72,8 +87,9 @@ const Signin = (props) => {
             Sign in to continue on Twitter
           </h2>
           <div
-            onClick={() =>
-              props.signIn(props.provider.id, { callbackUrl: "/" })
+            onClick={
+              /*() =>
+              props.signIn(props.provider.id, { callbackUrl: "/" })*/ signinClickHandler
             }
             className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
           >

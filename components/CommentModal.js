@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { idState, modalState } from "@/atom/modalAtom";
 import Modal from "react-modal";
 import {
@@ -52,13 +52,13 @@ const CommentModal = () => {
   };
 
   return (
-    <div>
+    <div className="">
       {openModal && (
         <Modal
           ariaHideApp={false}
           isOpen={openModal}
           onRequestClose={() => setOpenModal(false)}
-          className="absolute z-50 top-24 left-[50%] translate-x-[-50%] max-w-lg w-[90%] h-auto bg-white border border-gray-200 shadow-lg rounded-lg"
+          className="absolute z-40 top-24 left-[50%] translate-x-[-50%] max-w-lg w-[90%] h-auto bg-white border border-gray-200 shadow-lg rounded-lg"
         >
           <div className="py-2 px-1.5">
             <div

@@ -17,9 +17,9 @@ const Sidebar = ({
 
   return (
     <div className="hidden sm:flex flex-col px-8 xl:items-start fixed h-full xl:ml-24">
-      <div className="hover:bg-blue-100 xl:ml-2 rounded-full p-4">
+      <div className="hover:bg-blue-100 xl:ml-2 rounded-full p-2 mt-1">
         <Image
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREv2iK0rk8t7xPQQx_G-SKoUNao4VpV5ywoF6VdVJZZQ&s"
+          src="/assets/images/twitter-logo.png"
           alt="twitter-logo"
           width="30"
           height="30"
@@ -61,6 +61,7 @@ const Sidebar = ({
         <button className="bg-blue-500 text-white rounded-full w-[150px] h-[50px] font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">
           Tweet
         </button>
+        
       )}
       {isAuth && (
         <Link

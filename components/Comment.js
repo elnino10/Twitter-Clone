@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   BookmarkIcon,
   ChatIcon,
@@ -7,11 +8,18 @@ import {
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useState } from "react";
 import { HiArrowPathRoundedSquare, HiArrowUpTray } from "react-icons/hi2";
 
-const Comment = ({ comment, postId, commentId }) => {
-  const [panelShown, setPanelShown] = useState(false);
+const Comment = ({
+  comment,
+  postId,
+  commentId,
+  panelShown,
+  onShowPanel,
+  onHidePanel,
+  activePanelId,
+  setActivePanelId,
+}) => {
   const [userLikes, setUserLikes] = useState(false);
   const { data: session } = useSession();
 
@@ -50,25 +58,29 @@ const Comment = ({ comment, postId, commentId }) => {
   };
 
   // show panel
-  const toggleActionPanel = (e) => {
+  const toggleActionPanel = (id, e) => {
+    setActivePanelId(id);
     e.stopPropagation();
-    const dataValue = e.currentTarget.getAttribute("data-value");
-    if (dataValue === "panel") {
-      return setPanelShown(!panelShown);
+    if (panelShown) {
+      onHidePanel();
+    } else {
+      onShowPanel(id);
     }
   };
 
   // click around the body closes panel
-  const postClickHandler = (e) => {
-    e.stopPropagation();
-    const dataValue = e.currentTarget.getAttribute("data-value");
-    if (panelShown && dataValue !== "panel") {
-      return setPanelShown(false);
+  const postClickHandler = () => {
+    setActivePanelId(null);
+    if (panelShown) {
+      return onHidePanel();
     }
   };
 
   return (
-    <div onClick={postClickHandler} className="hover:bg-gray-100 border-b">
+    <div
+      onClick={postClickHandler}
+      className="hover:bg-gray-100 border-b h-auto"
+    >
       <div className="flex items-center relative">
         <div className="w-[50px] p-2">
           <Image
@@ -89,7 +101,7 @@ const Comment = ({ comment, postId, commentId }) => {
         </div>
         <div
           data-value="panel"
-          onClick={toggleActionPanel}
+          onClick={toggleActionPanel.bind(null, commentId)}
           className="ml-auto flex flex-col relative"
         >
           <DotsHorizontalIcon className="h-10 w-10 menuHoverEffect hover:bg-sky-100 hover:text-sky-500 p-2 peer" />
@@ -97,7 +109,7 @@ const Comment = ({ comment, postId, commentId }) => {
             More
           </span>
         </div>
-        {panelShown && (
+        {panelShown && activePanelId === commentId && (
           <div className="translate-x-[360px] w-auto translate-y-14 bg-white h-auto border py-4 px-5 rounded-md absolute shadow text-gray-800 font-semibold text-lg leading-1">
             <div className="flex flex-col items-start justify-between">
               <span className="text-md hover:text-sky-500 cursor-pointer">
@@ -118,7 +130,7 @@ const Comment = ({ comment, postId, commentId }) => {
       </div>
       <div className="px-10">
         <p className="text-gray-800 text-[15px] sm:text-[16px] mb-2 pl-11">
-          {comment?.reply || comment?.comment}
+          {comment?.reply}
         </p>
         <div className="w-[380px] h-auto flex m-auto rounded-lg">
           {comment?.fileURL && (
@@ -133,12 +145,12 @@ const Comment = ({ comment, postId, commentId }) => {
             />
           )}
         </div>
-        <div className="flex items-center justify-between h-10 my-1 text-gray-500 p-2">
+        <div className="flex items-center justify-between h-7 mt-5 text-gray-500 p-1">
           <div className="">
             <div className="flex items-center hover:text-sky-500 peer">
               <ChatIcon
                 onClick={commentHandler}
-                className="h-10 w-10 p-2 menuHoverEffect hover:bg-sky-100"
+                className="h-10 w-10 p-2.5 menuHoverEffect hover:bg-sky-100"
               />
             </div>
             <span className="absolute ml-0.5 text-xs bg-gray-500 text-white rounded-sm px-1 py-0.5 invisible peer-hover:visible delay-300 ease-in">
@@ -147,7 +159,7 @@ const Comment = ({ comment, postId, commentId }) => {
           </div>
           <div className="">
             <div className="flex items-center hover:text-green-500 peer">
-              <HiArrowPathRoundedSquare className="h-10 w-10 p-2 menuHoverEffect hover:bg-green-100" />
+              <HiArrowPathRoundedSquare className="h-10 w-10 p-2.5 menuHoverEffect hover:bg-green-100" />
             </div>
             <span className="absolute ml-0.5 text-xs bg-gray-500 text-white rounded-sm px-1 py-0.5 invisible peer-hover:visible delay-300 ease-in">
               Retweet
@@ -157,7 +169,7 @@ const Comment = ({ comment, postId, commentId }) => {
             {userLikes ? (
               <div className="">
                 <div className="flex items-center hover:text-red-500 peer">
-                  <HeartIconSolid className="h-10 w-10 p-2 text-red-500" />
+                  <HeartIconSolid className="h-10 w-10 p-2.5 text-red-500" />
                 </div>
                 <span className="absolute ml-0.5 text-xs bg-gray-500 text-white rounded-sm px-1 py-0.5 invisible peer-hover:visible delay-300 ease-in">
                   Unlike
@@ -166,7 +178,7 @@ const Comment = ({ comment, postId, commentId }) => {
             ) : (
               <div className="">
                 <div className="flex items-center hover:text-red-500 peer">
-                  <HeartIcon className="h-10 w-10 p-2 menuHoverEffect hover:bg-red-100" />
+                  <HeartIcon className="h-10 w-10 p-2.5 menuHoverEffect hover:bg-red-100" />
                 </div>
                 <span className="absolute ml-0.5 text-xs bg-gray-500 text-white rounded-sm px-1 py-0.5 invisible peer-hover:visible delay-300 ease-in">
                   Like
@@ -175,13 +187,13 @@ const Comment = ({ comment, postId, commentId }) => {
             )}
           </div>
           <div>
-            <BookmarkIcon className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100 peer" />
+            <BookmarkIcon className="h-10 w-10 p-2.5 menuHoverEffect hover:text-sky-500 hover:bg-sky-100 peer" />
             <span className="absolute ml-0.5 text-xs bg-gray-500 text-white rounded-sm px-1 py-0.5 invisible peer-hover:visible delay-300 ease-in">
               Bookmark
             </span>
           </div>
           <div>
-            <HiArrowUpTray className="h-10 w-10 p-2 menuHoverEffect hover:text-sky-500 hover:bg-sky-100 peer" />
+            <HiArrowUpTray className="h-10 w-10 p-2.5 menuHoverEffect hover:text-sky-500 hover:bg-sky-100 peer" />
             <span className="absolute ml-0.5 text-xs bg-gray-500 text-white rounded-sm px-1 py-0.5 invisible peer-hover:visible delay-300 ease-in">
               Share
             </span>

@@ -13,6 +13,9 @@ import Signup from "@/components/Signup";
 import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
 import TrendsPage from "@/components/TrendsPage";
 import CommentModal from "@/components/CommentModal";
+import Backdrop from "@/components/UI/Backdrop";
+import { useRecoilState } from "recoil";
+import { modalState } from "@/atom/modalAtom";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +26,8 @@ export default function Home({ newsData, userData }) {
   const [isActive, setIsActive] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState("");
   const { data: session } = useSession();
-  const activeMenuRef = useRef(null);
+
+  const [openModal, setOpenModal] = useRecoilState(modalState);
 
   // sets the active menu
   useEffect(() => {
@@ -86,7 +90,6 @@ export default function Home({ newsData, userData }) {
           {/* Sidebar */}
           <Sidebar
             isAuth={isAuth}
-            ref={activeMenuRef}
             menuItems={menuItems}
             menuItemsAuth={menuItemsAuth}
             isActive={isActive}
@@ -112,6 +115,9 @@ export default function Home({ newsData, userData }) {
           {/* Modal */}
           <CommentModal />
 
+          {/* Modal Backdrop */}
+          {openModal && <Backdrop />}
+          
           <Modal
             isVisible={showSigninModal}
             closeModal={closeSigninModalHandler}

@@ -99,7 +99,7 @@ const CommentInput = ({ postId }) => {
         <div className="w-full divide-y divide-gray-200">
           <div className="">
             <textarea
-              className="w-full border-none focus:ring-0 text-lg placeholder-gray-500 tracking-wide min-h-[50px] text-gray-700"
+              className="w-full border-none focus:ring-0 text-lg placeholder-gray-500 tracking-wide min-h-[50px] text-gray-700 bg-inherit"
               rows="2"
               placeholder="Tweet your reply"
               value={inputText}
