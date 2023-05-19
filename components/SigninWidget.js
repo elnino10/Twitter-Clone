@@ -2,6 +2,7 @@ import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import { AiFillApple, AiOutlineCopyrightCircle } from "react-icons/ai";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const SigninWidget = (props) => {
   const router = useRouter();
