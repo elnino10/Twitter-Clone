@@ -4,7 +4,7 @@ import {
   SearchIcon,
 } from "@heroicons/react/outline";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { AiOutlineSetting } from "react-icons/ai";
 import Trending from "./Trending";
 import { useRouter } from "next/router";
@@ -14,12 +14,13 @@ const TrendsPage = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    const goBack = () => {
-      router.back();
-    };
-    goBack()
+  const goBack = useCallback(() => {
+    router.back();
   }, [router]);
+
+  useEffect(() => {
+    goBack();
+  }, [goBack]);
 
   return (
     <section className="sm:ml-24 xl:ml-[25rem] border-black-100 border-l border-r shadow mt-1 flex-grow max-w-[597px] relative">
