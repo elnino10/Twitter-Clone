@@ -15,7 +15,12 @@ export const loadingState= atom ({
     default: false
 })
 
-export const signinState = atom({
-    key: "signinState",
+export const editPostModalState = atom({
+    key: "editPostModalState",
     default: false
+})
+
+export const postTextState = atom({
+    key: "postTextState",
+    default: ""
 })

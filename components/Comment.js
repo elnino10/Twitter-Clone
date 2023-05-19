@@ -9,8 +9,10 @@ import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { HiArrowPathRoundedSquare, HiArrowUpTray } from "react-icons/hi2";
+import Moment from "react-moment";
 
 const Comment = ({
+  post,
   comment,
   postId,
   commentId,
@@ -25,11 +27,11 @@ const Comment = ({
 
   // make a reply to a post if signed in, else redirect to sign in page
   const commentHandler = () => {
-    if (!session) {
-      router.push("/auth/signin");
-    } else {
-      setOpenModal(!openModal);
-    }
+    // if (!session) {
+    //   router.push("/auth/signin");
+    // } else {
+    //   setOpenModal(!openModal);
+    // }
   };
 
   // check for user like in comment
@@ -98,6 +100,11 @@ const Comment = ({
           <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
             @{comment?.username}
           </span>
+
+          <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
+            {" "}
+            - <Moment fromNow>{comment?.timestamp?.toDate()}</Moment>
+          </span>
         </div>
         <div
           data-value="panel"
@@ -137,7 +144,7 @@ const Comment = ({
             <Image
               width="0"
               height="0"
-              src={post.fileURL}
+              src={comment.fileURL}
               alt="post-image"
               sizes="auto"
               priority

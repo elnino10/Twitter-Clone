@@ -23,7 +23,13 @@ import Image from "next/image";
 import Moment from "react-moment";
 import Alert from "./UI/Alert";
 import { useRecoilState } from "recoil";
-import { idState, modalState } from "@/atom/modalAtom";
+import {
+  editPostModalState,
+  idState,
+  modalState,
+  postTextState,
+} from "@/atom/modalAtom";
+import { BsDot } from "react-icons/bs";
 
 const Posts = ({ post, postId, onSetLoading }) => {
   const [userLikes, setUserLikes] = useState(false);
@@ -36,6 +42,8 @@ const Posts = ({ post, postId, onSetLoading }) => {
   const router = useRouter();
   const [openModal, setOpenModal] = useRecoilState(modalState);
   const [getId, setId] = useRecoilState(idState);
+  const [openEditModal, setOpenEditModal] = useRecoilState(editPostModalState);
+  const [postText, setPostText] = useRecoilState(postTextState);
 
   // get all likes for a post
   useEffect(() => {
@@ -98,9 +106,9 @@ const Posts = ({ post, postId, onSetLoading }) => {
 
   // click around the body closes edit/delete panel
   const postClickHandler = (e) => {
-    e.stopPropagation();
-    const dataValue = e.currentTarget.getAttribute("data-value");
-    if (panelShown && dataValue !== "panel") {
+    // e.stopPropagation();
+    // const dataValue = e.currentTarget.getAttribute("data-value");
+    if (panelShown /*&& dataValue !== "panel"*/) {
       return setPanelShown(false);
     }
     if (!panelShown && !alertShown) {
@@ -136,8 +144,12 @@ const Posts = ({ post, postId, onSetLoading }) => {
     }
   };
 
-  // update an existing post
-  const updatePostHandler = () => {};
+  // open edit modal
+  const editModalDisplayHandler = () => {
+    setOpenEditModal(true);
+    setId(postId);
+    setPostText(post.text);
+  };
 
   return (
     <div
@@ -172,6 +184,14 @@ const Posts = ({ post, postId, onSetLoading }) => {
           <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
             @{post.username}
           </span>
+          {post.updated && (
+            <div className="flex items-center">
+              <BsDot className="mt-1 text-gray-500" />
+              <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
+                Edited
+              </span>
+            </div>
+          )}
           <span className="text-sm sm:text-[15px] text-gray-500 text-ellipsis overflow-hidden">
             {" "}
             - <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
@@ -188,24 +208,24 @@ const Posts = ({ post, postId, onSetLoading }) => {
           </span>
         </div>
         {panelShown && (
-          <div className="translate-x-[435px] w-[100px] translate-y-3 h-auto border py-2 px-4 rounded-md absolute shadow">
+          <div className="translate-x-[435px] w-auto translate-y-3 h-auto border py-2 px-4 rounded-md absolute shadow bg-gray-100">
             {session?.user.userid === post.userId ? (
-              <div className="flex flex-col items-start justify-between">
+              <div className="flex flex-col items-start justify-between text-sm">
                 <span
-                  onClick={updatePostHandler}
+                  onClick={editModalDisplayHandler}
                   className="text-md hover:text-sky-500 cursor-pointer"
                 >
-                  Edit
+                  Edit text
                 </span>
                 <span
                   onClick={alertDisplayHandler}
                   className="text-md hover:text-red-500 cursor-pointer"
                 >
-                  Delete
+                  Delete post
                 </span>
               </div>
             ) : (
-              <span className="text-md hover:text-red-500 cursor-pointer">
+              <span className="text-md hover:text-red-500 cursor-pointer text-sm">
                 Report
               </span>
             )}

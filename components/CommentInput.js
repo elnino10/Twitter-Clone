@@ -1,18 +1,29 @@
+import { db, storage } from "@/firebase";
 import {
   EmojiHappyIcon,
   PhotographIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import EmojiPicker from "emoji-picker-react";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const CommentInput = ({ postId }) => {
   const [inputText, setInputText] = useState("");
   const [postFile, setPostFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [emojiVisible, setEmojiVisible] = useState(false);
+  const textRef = useRef();
+  const fileInputRef = useRef();
   const { data: session } = useSession();
 
   // sets the post text in state
@@ -37,26 +48,27 @@ const CommentInput = ({ postId }) => {
   };
 
   // create comment in firestore database
-  const createComment = async () => {
+  const createReply = async () => {
     if (isLoading) return;
     setIsLoading(true);
+    
     const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
       userId: session.user.userid,
       name: session.user.name,
       username: session.user.username,
       userImage: session.user.image,
-      comment: inputText,
+      reply: inputText,
       timestamp: serverTimestamp(),
     });
 
     // create file reference
-    const fileRef = ref(storage, `posts/${docRef.id}/image`);
+    const fileRef = ref(storage, `posts/${postId}/${docRef.id}/image`);
 
     // checking file attachment to post
     if (postFile) {
       await uploadString(fileRef, postFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(fileRef);
-        await updateDoc(doc(db, "posts", docRef.id), {
+        await updateDoc(doc(db, "posts", postId, "comments", docRef.id), {
           fileURL: downloadURL,
         });
       });
@@ -82,6 +94,11 @@ const CommentInput = ({ postId }) => {
     setEmojiVisible(false);
   };
 
+  // cancel the selected file on preview
+  const removeImageHandler = () => {
+    setPostFile(null);
+  };
+
   return (
     <div>
       <p className="text-gray-500 ml-20">
@@ -104,6 +121,7 @@ const CommentInput = ({ postId }) => {
               placeholder="Tweet your reply"
               value={inputText}
               onChange={inputHandler}
+              ref={textRef}
             ></textarea>
           </div>
           {postFile && (
@@ -132,7 +150,7 @@ const CommentInput = ({ postId }) => {
                     <input
                       type="file"
                       hidden
-                      // ref={fileInputRef}
+                      ref={fileInputRef}
                       onChange={addSelectedFile}
                     />
                   </div>
@@ -142,7 +160,7 @@ const CommentInput = ({ postId }) => {
                       className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer"
                     />
                     <div
-                      className={`absolute z-50 ${
+                      className={`absolute z-40 translate-y-[-440px] shadow-lg border border-gray-300 rounded-lg ${
                         emojiVisible ? "block" : "hidden"
                       }`}
                     >
@@ -159,11 +177,11 @@ const CommentInput = ({ postId }) => {
               )}
             </div>
             <button
-              onClick={createComment}
+              onClick={createReply}
               disabled={!inputText.trim()}
               className="bg-blue-500 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-90 disabled:opacity-50"
             >
-              Reply
+              {isLoading ? "Sending reply" : "Reply"}
             </button>
           </div>
         </div>

@@ -157,7 +157,7 @@ const InputFeed = ({ isAuth }) => {
                         className="menuHoverEffect p-2 text-sky-500 hover:bg-sky-100 h-10 w-10 cursor-pointer"
                       />
                       <div
-                        className={`absolute z-50 ${
+                        className={`absolute z-50 shadow-lg border border-gray-300 rounded-lg ${
                           emojiVisible ? "block" : "hidden"
                         }`}
                       >

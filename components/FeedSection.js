@@ -27,8 +27,7 @@ const FeedSection = ({ isAuth }) => {
   const ref = useRef();
   const scrollDirection = useScrollDirection(ref);
   const [isLoading, setLoading] = useRecoilState(loadingState);
-  const [openCommentModal, setOpenCommentModal] = useRecoilState(modalState)
-
+  const [openCommentModal, setOpenCommentModal] = useRecoilState(modalState);
 
   // get all posts from database
   const getPosts = () => {
@@ -57,7 +56,7 @@ const FeedSection = ({ isAuth }) => {
 
   const showTrendsHandler = () => {
     router.push("/trending");
-    setLoading(true)
+    setLoading(true);
   };
 
   // scroll to top
@@ -67,7 +66,11 @@ const FeedSection = ({ isAuth }) => {
 
   return (
     <section className="sm:ml-24 xl:ml-[25rem] border-black-100 border-l border-r shadow mt-1 flex-grow max-w-[597px] relative">
-      <div className={` ${!openCommentModal ? "z-10 sticky top-0" : ""} flex items-center justify-between p-2 border-b border-gray-200 bg-white`}>
+      <div
+        className={` ${
+          !openCommentModal ? "z-10 sticky top-0" : ""
+        } flex items-center justify-between p-2 border-b border-gray-200 bg-white`}
+      >
         <h2 className="text-lg sm:text-xl font-bold cursor-pointer">Home</h2>
         <div className="cursor-pointer hover:bg-gray-100 rounded-full sm:p-2 w-20 h-10 flex items-center">
           <SparklesIcon
@@ -89,7 +92,7 @@ const FeedSection = ({ isAuth }) => {
       </div>
 
       {isLoading ? (
-          <LoadingIndicator />
+        <LoadingIndicator />
       ) : (
         <div className="">
           <InputFeed isAuth={isAuth} />
@@ -102,7 +105,11 @@ const FeedSection = ({ isAuth }) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Post post={post.data()} postId={post.id} onSetLoading={setLoading} />
+                <Post
+                  post={post.data()}
+                  postId={post.id}
+                  onSetLoading={setLoading}
+                />
               </motion.div>
             ))}
           </AnimatePresence>

@@ -12,7 +12,7 @@ import { db } from "@/firebase";
 import CommentModal from "./CommentModal";
 import Backdrop from "./UI/Backdrop";
 import { useRecoilState } from "recoil";
-import { modalState } from "@/atom/modalAtom";
+import { editPostModalState, modalState } from "@/atom/modalAtom";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,12 +26,12 @@ export default function PostSection({ newsData, userData }) {
   const router = useRouter();
 
   const [openModal, setOpenModal] = useRecoilState(modalState);
+  const [openEditModal, setOpenEditModal] = useRecoilState(editPostModalState)
 
   const { postId } = router.query;
 
   // get the post information
   useEffect(() => {
-    postId &&
       onSnapshot(doc(db, "posts", postId), (snapShot) =>
         setPostDetails(snapShot)
       );
@@ -103,7 +103,7 @@ export default function PostSection({ newsData, userData }) {
           <CommentModal />
 
           {/* Modal Backdrop */}
-          {openModal && <Backdrop />}
+          {openModal || openEditModal && <Backdrop />}
 
           {/* Post */}
           <PostDetails

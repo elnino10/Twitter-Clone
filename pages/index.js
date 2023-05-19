@@ -2,17 +2,17 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-
 import Sidebar from "@/components/Sidebar";
 import FeedSection from "@/components/FeedSection";
 import WidgetSection from "@/components/WidgetSection";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/UI/Modal";
 import SigninModal from "@/components/SigninModal";
 import Signup from "@/components/Signup";
 import { menuItems, menuItemsAuth } from "@/public/assets/data/MenuData";
 import TrendsPage from "@/components/TrendsPage";
 import CommentModal from "@/components/CommentModal";
+import EditPostModal from "@/components/EditPostModal";
 import Backdrop from "@/components/UI/Backdrop";
 import { useRecoilState } from "recoil";
 import { modalState } from "@/atom/modalAtom";
@@ -114,10 +114,11 @@ export default function Home({ newsData, userData }) {
 
           {/* Modal */}
           <CommentModal />
+          <EditPostModal />
 
           {/* Modal Backdrop */}
           {openModal && <Backdrop />}
-          
+
           <Modal
             isVisible={showSigninModal}
             closeModal={closeSigninModalHandler}

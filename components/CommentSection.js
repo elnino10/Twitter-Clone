@@ -1,6 +1,7 @@
 import Comment from "./Comment";
 
 const CommentSection = ({
+  post,
   postId,
   comments,
   commentPanelShown,
@@ -9,12 +10,12 @@ const CommentSection = ({
   onHidePanel,
   onShowPanel,
 }) => {
-
   return (
     <div onClick={onHidePanel}>
       {comments &&
         comments.map((comment) => (
           <Comment
+            post={post}
             key={comment.id}
             comment={comment.data()}
             commentId={comment.id}

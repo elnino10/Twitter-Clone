@@ -18,12 +18,14 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  orderBy,
+  query,
   setDoc,
 } from "firebase/firestore";
 import CommentInput from "./CommentInput";
 import CommentSection from "./CommentSection";
 import { useRecoilState } from "recoil";
-import { idState, modalState } from "@/atom/modalAtom";
+import { editPostModalState, idState, modalState } from "@/atom/modalAtom";
 import LoadingIndicator from "./UI/LoadingIndicator";
 
 const PostDetails = ({ postId, post, postLikes, db }) => {
@@ -38,6 +40,7 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
   const router = useRouter();
   const [openModal, setOpenModal] = useRecoilState(modalState);
   const [getId, setId] = useRecoilState(idState);
+  const [openEditModal, setOpenEditModal] = useRecoilState(editPostModalState);
 
   const { data: session } = useSession();
 
@@ -48,6 +51,19 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
     );
     setNumLikes(postLikes.length > 0 && postLikes.length);
   }, [postLikes, session?.user.userid]);
+
+  // get all the comments for post
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, "posts", postId, "comments"),
+        orderBy("timestamp", "desc")
+      ),
+      (snapshot) => {
+        setComments(snapshot.docs);
+      }
+    );
+  }, [db, postId]);
 
   // show edit/delete panel
   const toggleActionPanel = (e) => {
@@ -69,7 +85,6 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
 
   const alertDisplayHandler = () => {
     setAlertShown(true);
-    setPanelShown(false);
   };
 
   const closeAlertHandler = () => {
@@ -117,20 +132,6 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
     }
   };
 
-  // get all the comments for post
-  const getAllComments = useCallback(() => {
-    onSnapshot(collection(db, "posts", postId, "comments"), (snapshot) => {
-      setComments(snapshot.docs);
-    });
-  }, [db, postId]);
-
-  useEffect(() => {
-    getAllComments();
-  }, [getAllComments]);
-
-  // update an existing post
-  const updatePostHandler = () => {};
-
   // if panel is shown, close panel on click
   const hidePanelHandler = () => {
     panelShown && setPanelShown(false);
@@ -144,12 +145,22 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
     setLoading(true);
   };
 
+  // open edit modal
+  const editModalDisplayHandler = () => {
+    setOpenEditModal(true);
+    setId(postId);
+  };
+
   return (
     <section
       onClick={hidePanelHandler}
       className="sm:ml-24 xl:ml-[25rem] border-black-100 border-l border-r shadow mt-1 flex-grow xl:max-w-[597px] relative"
     >
-      <div className={`${!openModal ? "z-10 sticky top-0 bg-white" : ""} flex items-center p-2  text-gray-800 border-b xl:border-none`}>
+      <div
+        className={`${
+          !openModal ? "z-10 sticky top-0 bg-white" : ""
+        } flex items-center p-2  text-gray-800 border-b xl:border-none`}
+      >
         <ArrowLeftIcon
           onClick={trackBackHandler}
           className="h-10 p-2 my-1 mr-10 menuHoverEffect"
@@ -176,7 +187,7 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
                 <Image
                   width="50"
                   height="50"
-                  src={post?.userImage}
+                  src={post ? post.userImage : "/assets/images/avatar.png"}
                   alt="user-image"
                   className="rounded-full w-full"
                 />
@@ -204,7 +215,7 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
                   {session?.user.userid === post.userId ? (
                     <div className="flex flex-col items-start justify-between">
                       <span
-                        onClick={updatePostHandler}
+                        onClick={editModalDisplayHandler}
                         className="text-md hover:text-sky-500 cursor-pointer"
                       >
                         Edit
@@ -234,10 +245,10 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
                   <Image
                     width="0"
                     height="0"
-                    src={post.fileURL}
+                    src={post?.fileURL}
                     alt="post-image"
                     sizes="auto"
-                    priority
+                    priority 
                     className="m-auto w-full p-5"
                   />
                 )}
@@ -326,6 +337,7 @@ const PostDetails = ({ postId, post, postLikes, db }) => {
           </div>
           <CommentInput postId={postId} />
           <CommentSection
+            post={post}
             postId={postId}
             db={db}
             comments={comments}

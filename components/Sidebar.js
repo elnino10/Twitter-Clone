@@ -58,10 +58,12 @@ const Sidebar = ({
         </div>
       )}
       {isAuth && (
-        <button className="bg-blue-500 text-white rounded-full w-[150px] h-[50px] font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">
-          Tweet
-        </button>
-        
+        <div className="flex flex-col items-start">
+          <button className="bg-blue-500 text-white rounded-full w-[150px] h-[50px] font-bold shadow-md hover:brightness-90 text-lg hidden xl:inline xl:mt-1">
+            Tweet
+          </button>
+          <Link href="/auth/signout" className="text-blue-500 text-sm hover:bg-blue-100 px-2.5 py-1.5 hover:text-blue-600 mt-2 mx-auto rounded-full">Sign Out</Link>
+        </div>
       )}
       {isAuth && (
         <Link

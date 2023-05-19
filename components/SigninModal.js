@@ -3,16 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiFillApple, AiOutlineClose } from "react-icons/ai";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
-import { signinState } from "@/atom/modalAtom";
 
 const SigninModal = (props) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const inputRef = useRef(null);
   const router = useRouter();
-
-  const [signinClicked, setSigninClicked] = useRecoilState(signinState);
 
   // removes the effect of clicking on the input by clicking on it's parent element
   const removeClickEffect = (e) => {
@@ -43,15 +39,11 @@ const SigninModal = (props) => {
     props.onCloseModal();
   };
 
-  const signinClickHandler = () => {
-    setSigninClicked(true)
-  };
-
   let display = "hidden";
 
   return (
     <div
-      className="h-full xl:rounded-xl xl:w-[600px] xl:h-[600px] xl:px-[70px]"
+      className="h-full xl:rounded-xl xl:w-[600px] xl:h-[600px] xl:px-[70px] flex flex-col items-start"
       data-value="parent"
       onClick={removeClickEffect}
     >
@@ -68,12 +60,12 @@ const SigninModal = (props) => {
           className="ml-[8.5rem] xl:ml-[230px]"
         />
       </div>
-      <div className="pt-12 px-8">
+      <div className="pt-12 flex flex-col ml-10">
         <h2 className="font-bold text-[25px] text-gray-800">
           Sign in to continue on Twitter
         </h2>
         <div
-          onClick={/*() => router.push("/auth/signin")*/ signinClickHandler}
+          onClick={() => router.push("/auth/signin")}
           className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
         >
           <Image
