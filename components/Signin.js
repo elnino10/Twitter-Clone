@@ -5,7 +5,7 @@ import { AiFillApple } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 
-const Signin = (props) => {
+const Signin = ({ provider, signIn }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const inputRef = useRef(null);
@@ -72,9 +72,7 @@ const Signin = (props) => {
             Sign in to continue on Twitter
           </h2>
           <div
-            onClick={() =>
-              props.signIn(props.provider.id, { callbackUrl: "/" })
-            }
+            onClick={() => signIn(provider.id, { callbackUrl: "/" })}
             className="border rounded-full h-10 flex items-center justify-center mt-7 cursor-pointer hover:bg-gray-100 transition duration-200 text-gray-800"
           >
             <Image
