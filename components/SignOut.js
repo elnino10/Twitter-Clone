@@ -1,13 +1,16 @@
+import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import { signOut } from "next-auth/react";
 
-const SignOut = ({ signOut }) => {
+const SignOut = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (!session) router.push("/");
+  useEffect(() => {
+    if (!session) router.push("/");
+  }, [router, session]);
 
   return (
     <div className="py-12 px-8 xl:w-[40%] xl:mx-auto border shadow-lg rounded-md mt-[100px] flex flex-col items-center justify-center">
