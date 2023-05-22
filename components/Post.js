@@ -72,7 +72,8 @@ const Posts = ({ post, postId, onSetLoading }) => {
   }, [postId]);
 
   // check for user like in post
-  const likeHandler = async () => {
+  const likeHandler = async (e) => {
+    e.stopPropagation()
     if (session) {
       setUserLikes((prev) => !prev);
       // if user liked the post, remove like, else, set as liked
@@ -106,9 +107,7 @@ const Posts = ({ post, postId, onSetLoading }) => {
 
   // click around the body closes edit/delete panel
   const postClickHandler = (e) => {
-    // e.stopPropagation();
-    // const dataValue = e.currentTarget.getAttribute("data-value");
-    if (panelShown /*&& dataValue !== "panel"*/) {
+    if (panelShown) {
       return setPanelShown(false);
     }
     if (!panelShown && !alertShown) {
